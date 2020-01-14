@@ -10,4 +10,5 @@ Public Class clsSerialNumberJson
     Public Property wip As Boolean
     Public Property status As String
     Public Property unit_type As String
+    Public Property user As String
 End Class

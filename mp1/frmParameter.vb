@@ -376,6 +376,7 @@ Public Class frmParameter
             .wip = True
             .status = "A"
             .unit_type = "BUILT"
+            .user = user_id
         End With
         Dim output As String
         output = JsonConvert.SerializeObject(json)
@@ -397,6 +398,7 @@ Public Class frmParameter
             .remark = vNote
             .start_time = Now
             .stop_time = Now
+            .user = user_id
         End With
         output = JsonConvert.SerializeObject(performing)
         objResponse = objApiService.SendRequest(vUrl & "/api/performing/", output)

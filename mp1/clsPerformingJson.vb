@@ -8,4 +8,5 @@ Public Class clsPerformingJson
     Public Property stop_time As DateTime
     Public Property result As Boolean
     Public Property remark As String
+    Public Property user As String
 End Class
