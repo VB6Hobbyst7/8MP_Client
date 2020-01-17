@@ -22,6 +22,16 @@ Public Class ucParamOption
         End Set
     End Property
 
+    Private vId As String
+    Public Property id() As String
+        Get
+            Return vId
+        End Get
+        Set(ByVal value_ As String)
+            vId = value_
+        End Set
+    End Property
+
     Public Property title() As String
         Get
             Return vTitleValue

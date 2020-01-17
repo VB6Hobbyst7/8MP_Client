@@ -791,6 +791,7 @@ Exit_Function:
         'objItems = getItemBySlug(vParameterSlug)
         objItems = objApiService.getObjectByUrl(vParameterSlug)
 
+        Dim vId As String
         Dim vItemName As String
         Dim vTitle As String
         Dim vDefaultValue As String
@@ -814,6 +815,8 @@ Exit_Function:
             If objItem("status") = "D" Then
                 Continue For
             End If
+
+            vId = objItem("id")
             vItemName = objItem("name")
             vTitle = objItem("title")
             vDefaultValue = objItem("default_value")
@@ -825,6 +828,7 @@ Exit_Function:
             Select Case vItemType
                 Case "TEXT"
                     ucText = New ucParaText With {
+                                .id = vId,
                                 .parameter = vItemName,'"textbox",
                                 .title = vTitle,
                                 .message = "Testing Mesasge",
@@ -848,6 +852,7 @@ Exit_Function:
                     ucText.showOpject()
                 Case "LIST"
                     ucList = New ucParamList With {
+                        .id = vId,
                         .parameter = vItemName,'"list",
                         .title = vTitle,
                         .message = "Testing Mesasge",
@@ -873,6 +878,7 @@ Exit_Function:
 
                 Case "RADIO"
                     ucRadio = New ucParamRadio With {
+                        .id = vId,
                         .parameter = vItemName,'"choice",
                         .title = vTitle,
                         .message = "",
@@ -898,6 +904,7 @@ Exit_Function:
                     ucRadio.showOpject()
                 Case "OPTION"
                     ucOption = New ucParamOption With {
+                        .id = vId,
                         .parameter = vItemName,'"option",
                         .title = vTitle,
                         .message = "",
@@ -1328,7 +1335,29 @@ Exit_Function:
 
     End Sub
 
+    Private Function addParameter() As Boolean
+        Dim strId As String
+        Dim strKey As String
+        Dim strValue As String
+        Dim aa As Object
+        Dim controlList As New List(Of Object)
+        For Each aa In Me.Controls
+            If (TypeOf aa Is mp.ucParaText) Or (TypeOf aa Is mp.ucParamList) _
+                Or (TypeOf aa Is mp.ucParamOption) Or (TypeOf aa Is mp.ucParamRadio) Then
+                'aa.Dispose()
+                strId = aa.id
+                strKey = aa.name
+                strValue = aa.value
+            End If
+        Next
+        Return False
+    End Function
+
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
+        '--------------------
+        addParameter()
+
+        '--------------------
         Dim vMoveTo As String = checkNextCondition(gNextPass)
         If vMoveTo <> gNextPass Then
             If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
@@ -1347,6 +1376,9 @@ Exit_Function:
 
         '--Do transaction
         doPerforming(vMoveTo, True)
+
+        '--Do Parameter trasaction--
+
 
 
 

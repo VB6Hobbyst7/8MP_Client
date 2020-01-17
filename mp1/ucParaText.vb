@@ -13,6 +13,16 @@ Public Class ucParaText
     Private vCode As String
 
 
+    Private vId As String
+    Public Property id() As String
+        Get
+            Return vId
+        End Get
+        Set(ByVal value_ As String)
+            vId = value_
+        End Set
+    End Property
+
     Private vParameterName As String
     Public Property parameter() As String
         Get
