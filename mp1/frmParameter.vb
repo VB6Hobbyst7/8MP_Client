@@ -1326,28 +1326,46 @@ Exit_Function:
         End If
 
         '--Do transaction
-        doPerforming(vMoveTo, False)
+        Dim iPerforming As Long
+        iPerforming = doPerforming(vMoveTo, False)
+        '--Do Parameter trasaction--
+        addParametric(iPerforming, user_id)
 
         '--Hook --POST
         If Not executeHook("POST", btnFail.Name) Then
             Exit Sub
         End If
 
+        reset()
     End Sub
 
-    Private Function addParameter() As Boolean
-        Dim strId As String
-        Dim strKey As String
-        Dim strValue As String
+    Private Function addParametric(strPerforming As Integer, strUser As String) As Boolean
+        'Dim strId As String
+        'Dim strKey As String
+        'Dim strValue As String
         Dim aa As Object
         Dim controlList As New List(Of Object)
         For Each aa In Me.Controls
             If (TypeOf aa Is mp.ucParaText) Or (TypeOf aa Is mp.ucParamList) _
                 Or (TypeOf aa Is mp.ucParamOption) Or (TypeOf aa Is mp.ucParamRadio) Then
                 'aa.Dispose()
-                strId = aa.id
-                strKey = aa.name
-                strValue = aa.value
+                Dim parametric As New clsParametricJson
+                With parametric
+                    .performing = strPerforming
+                    .item = aa.id
+                    .value = aa.value
+                    .user = user_id
+                End With
+
+                Dim output As String = ""
+                Dim objResponse As Object
+                output = JsonConvert.SerializeObject(parametric)
+                objResponse = objApiService.SendRequest(vUrl & "/api/parametric/", output)
+
+
+                'strId = aa.id
+                'strKey = aa.name
+                'strValue = aa.value
             End If
         Next
         Return False
@@ -1355,7 +1373,7 @@ Exit_Function:
 
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
         '--------------------
-        addParameter()
+
 
         '--------------------
         Dim vMoveTo As String = checkNextCondition(gNextPass)
@@ -1375,10 +1393,13 @@ Exit_Function:
         End If
 
         '--Do transaction
-        doPerforming(vMoveTo, True)
+        'doPerforming(vMoveTo, True)
+        Dim iPerforming As Long
+        iPerforming = doPerforming(vMoveTo, True)
+
 
         '--Do Parameter trasaction--
-
+        addParametric(iPerforming, user_id)
 
 
 
@@ -1387,6 +1408,7 @@ Exit_Function:
             Exit Sub
         End If
 
+        reset()
     End Sub
 
     Function executeHook(vEvent As String, vControlName As String) As Boolean
@@ -1429,7 +1451,7 @@ Exit_Function:
         Return True
     End Function
 
-    Function doPerforming(vMoveToOperation As String, result As Boolean) As Boolean
+    Function doPerforming(vMoveToOperation As String, result As Boolean) As Long
         '----Performing---
         Dim vNote As String = txtComment.Text
         Dim vSnMasterId As Integer
@@ -1444,6 +1466,7 @@ Exit_Function:
             .remark = vNote
             .start_time = gSerialNumber("perform_start_date")
             .stop_time = Now.ToLocalTime.ToString("o")
+            .user = user_id
         End With
         Dim output As String = ""
         Dim objResponse As Object
@@ -1456,8 +1479,8 @@ Exit_Function:
 
 
 
-        reset()
-        Return True
+        'reset()
+        Return objResponse("id")
     End Function
 
     Function updateSerialNumber(moveToOperation As String,

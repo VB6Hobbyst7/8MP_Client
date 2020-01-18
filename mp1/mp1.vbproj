@@ -93,6 +93,7 @@
     <Compile Include="clsAuthentication.vb" />
     <Compile Include="clsIni.vb" />
     <Compile Include="clsMPFlex.vb" />
+    <Compile Include="clsParametricJson.vb" />
     <Compile Include="clsPerformingJson.vb" />
     <Compile Include="clsSerialNumber.vb" />
     <Compile Include="clsSerialNumberJson.vb" />
