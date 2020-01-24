@@ -33,7 +33,7 @@ Partial Class frmParameter
         Me.tss1 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tts1 = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tss2 = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.cbOperation = New System.Windows.Forms.ComboBox()
+        Me.tssSn = New System.Windows.Forms.ToolStripStatusLabel()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnPass = New System.Windows.Forms.Button()
@@ -53,7 +53,7 @@ Partial Class frmParameter
         Me.lblExpToken = New System.Windows.Forms.Label()
         Me.timerExp = New System.Windows.Forms.Timer(Me.components)
         Me.btnNew = New System.Windows.Forms.Button()
-        Me.tssSn = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblOperation = New System.Windows.Forms.Label()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -140,14 +140,12 @@ Partial Class frmParameter
         Me.tss2.Name = "tss2"
         Me.tss2.Size = New System.Drawing.Size(0, 17)
         '
-        'cbOperation
+        'tssSn
         '
-        Me.cbOperation.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbOperation.FormattingEnabled = True
-        Me.cbOperation.Location = New System.Drawing.Point(171, 5)
-        Me.cbOperation.Name = "cbOperation"
-        Me.cbOperation.Size = New System.Drawing.Size(239, 26)
-        Me.cbOperation.TabIndex = 7
+        Me.tssSn.Name = "tssSn"
+        Me.tssSn.Size = New System.Drawing.Size(16, 17)
+        Me.tssSn.Text = "..."
+        Me.tssSn.ToolTipText = "Click to see detail"
         '
         'Label3
         '
@@ -318,7 +316,7 @@ Partial Class frmParameter
         'lblExpToken
         '
         Me.lblExpToken.AutoSize = True
-        Me.lblExpToken.Location = New System.Drawing.Point(650, 9)
+        Me.lblExpToken.Location = New System.Drawing.Point(739, 12)
         Me.lblExpToken.Name = "lblExpToken"
         Me.lblExpToken.Size = New System.Drawing.Size(16, 13)
         Me.lblExpToken.TabIndex = 24
@@ -338,18 +336,22 @@ Partial Class frmParameter
         Me.btnNew.Text = "New"
         Me.btnNew.UseVisualStyleBackColor = True
         '
-        'tssSn
+        'lblOperation
         '
-        Me.tssSn.Name = "tssSn"
-        Me.tssSn.Size = New System.Drawing.Size(16, 17)
-        Me.tssSn.Text = "..."
-        Me.tssSn.ToolTipText = "Click to see detail"
+        Me.lblOperation.AutoSize = True
+        Me.lblOperation.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblOperation.Location = New System.Drawing.Point(167, 5)
+        Me.lblOperation.Name = "lblOperation"
+        Me.lblOperation.Size = New System.Drawing.Size(87, 20)
+        Me.lblOperation.TabIndex = 26
+        Me.lblOperation.Text = "Operation :"
         '
         'frmParameter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(799, 566)
+        Me.Controls.Add(Me.lblOperation)
         Me.Controls.Add(Me.btnNew)
         Me.Controls.Add(Me.lblExpToken)
         Me.Controls.Add(Me.lblUnitFormat)
@@ -368,7 +370,6 @@ Partial Class frmParameter
         Me.Controls.Add(Me.btnPass)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.cbOperation)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtComment)
@@ -394,7 +395,6 @@ Partial Class frmParameter
     Friend WithEvents Label2 As Label
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents tss1 As ToolStripStatusLabel
-    Friend WithEvents cbOperation As ComboBox
     Friend WithEvents Label3 As Label
     Friend WithEvents tts1 As ToolStripStatusLabel
     Friend WithEvents tss2 As ToolStripStatusLabel
@@ -417,4 +417,5 @@ Partial Class frmParameter
     Friend WithEvents timerExp As Timer
     Friend WithEvents btnNew As Button
     Friend WithEvents tssSn As ToolStripStatusLabel
+    Friend WithEvents lblOperation As Label
 End Class

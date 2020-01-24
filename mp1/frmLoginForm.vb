@@ -98,8 +98,10 @@ Public Class frmLoginForm
             'gOperationName = operation("name")
             Select Case operation("operation_type")
                 Case "REGISTRATION"
+                    frmParameter.operation = vOperationId
                     frmParameter.ShowDialog()
                 Case "INSPECTION"
+                    frmParameter.operation = vOperationId
                     frmParameter.ShowDialog()
             End Select
         End If
