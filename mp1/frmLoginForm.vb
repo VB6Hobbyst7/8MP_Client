@@ -68,7 +68,17 @@ Public Class frmLoginForm
                 'frmParameter.Show()
                 'Form1.Show()
                 'Me.Close()
+                OK.Enabled = False
+                btnOpen.Enabled = True
+                Cancel.Enabled = True
+                UsernameTextBox.Enabled = False
+                PasswordTextBox.Enabled = False
             Else
+                UsernameTextBox.Enabled = True
+                PasswordTextBox.Enabled = True
+                OK.Enabled = True
+                btnOpen.Enabled = False
+                Cancel.Enabled = False
                 cbOperation.DataSource = Nothing
                 MsgBox("Invalid Username or Password , please try again", MsgBoxStyle.Critical, "Invalid User")
             End If
@@ -101,8 +111,8 @@ Public Class frmLoginForm
                     frmParameter.operation = vOperationId
                     frmParameter.ShowDialog()
                 Case "INSPECTION"
-                    frmParameter.operation = vOperationId
-                    frmParameter.ShowDialog()
+                    frmInspection.operation = vOperationId
+                    frmInspection.ShowDialog()
             End Select
         End If
     End Sub
@@ -146,11 +156,17 @@ Public Class frmLoginForm
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
         'Me.Close()
+        UsernameTextBox.Enabled = True
+        PasswordTextBox.Enabled = True
+
         cbOperation.DataSource = Nothing
         UsernameTextBox.Text = ""
         PasswordTextBox.Text = ""
         lblStatus.Text = ""
         UsernameTextBox.Select()
+        OK.Enabled = True
+        btnOpen.Enabled = False
+        Cancel.Enabled = False
     End Sub
 
     Private Sub UsernameTextBox_TextChanged(sender As Object, e As EventArgs) Handles UsernameTextBox.TextChanged

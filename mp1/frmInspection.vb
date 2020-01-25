@@ -8,7 +8,7 @@ Imports System.Text
 Imports Newtonsoft.Json
 
 <Runtime.InteropServices.ComVisible(True)>
-Public Class frmParameter
+Public Class frmInspection
 
     Dim objApiService As New clsAPIService
     Dim objSerialNumber As clsSerialNumber
@@ -41,6 +41,19 @@ Public Class frmParameter
     Dim gWorkOrderSlug As String
 
     Dim gSerialNumber As Object
+    Dim gSerialNumberSlug As String
+
+    Private operationPropertyValue As String
+    Public Property operation() As String
+        Get
+            Return operationPropertyValue
+        End Get
+        Set(ByVal value As String)
+            operationPropertyValue = value
+        End Set
+    End Property
+
+
 
     'Using Function()
     Public Shared Function getJsonString(ByVal address As String) As String
@@ -205,7 +218,7 @@ Public Class frmParameter
 
         'gOperationType
         Dim vSelectedOpr As String = gOperationName  'cbOperation.SelectedValue
-        Dim vSelectedWorkOrder As String = cbWorkOrder.SelectedValue
+        Dim vSelectedWorkOrder As String = gWorkOrderSlug  ' cbWorkOrder.SelectedValue
         If gOperationType = "REGISTRATION" Then
             If Not objSn Is Nothing Then
                 MsgBox(vSerialNumber & " still in process", MsgBoxStyle.Critical, "Unable to register")
@@ -352,7 +365,7 @@ Public Class frmParameter
         objRouteDetail = objApiService.getRoutingDetail(vRouting, vOperation)
         Dim vNextPass As String = ""
         Dim vNexFail As String = ""
-        If objRouteDetail("results") Is Nothing Then
+        If objRouteDetail("results").length = 0 Then
             MsgBox("Not found Next Pass configuration of routing " & vRouting, MsgBoxStyle.Critical,
                    "Not found Next pass info")
             Return False
@@ -375,13 +388,15 @@ Public Class frmParameter
             .wip = True
             .status = "A"
             .unit_type = "BUILT"
+            .user = user_id
         End With
         Dim output As String
         output = JsonConvert.SerializeObject(json)
 
         Dim objResponse As Object
         objResponse = objApiService.SendRequest(vUrl & "/api/serialnumber/", output)
-
+        gSerialNumberSlug = objResponse("slug")
+        tssSn.Text = vSn & " move to " & vNextPass
         '----Performing---
         Dim vSnMasterId As Integer
         vSnMasterId = objResponse("id")
@@ -395,11 +410,13 @@ Public Class frmParameter
             .remark = vNote
             .start_time = Now
             .stop_time = Now
+            .user = user_id
         End With
         output = JsonConvert.SerializeObject(performing)
         objResponse = objApiService.SendRequest(vUrl & "/api/performing/", output)
         Dim x As String
         x = objResponse("uid")
+
         '-----------------------
         Return True
     End Function
@@ -479,12 +496,22 @@ Public Class frmParameter
 
         gNextPass = objRouteDetail("next_pass")
         gNextFail = objRouteDetail("next_fail")
+
+        'In case No Next Pass configured , system will send back to previous operaion.
+        If gNextPass = "" Then
+            gNextPass = gSerialNumber("last_operation")
+            lblNextPass.Text = gNextPass & "(Previous)"
+        Else
+            lblNextPass.Text = gNextPass
+        End If
+
         gCurrentRouteDetailUrl = objRouteDetail("url")
+        gCurrentRouteDetailSlug = objRouteDetail("slug")
         gCurrentRoutePosition = objRouteDetail("position")
 
         'Show Routing ,next pass and next fail
         lblRouting.Text = objRouting("name")
-        lblNextPass.Text = gNextPass
+        'lblNextPass.Text = gNextPass
         lblnextFail.Text = gNextFail
 
         If gCurrentRoutePosition = "L" Then
@@ -776,6 +803,7 @@ Exit_Function:
         'objItems = getItemBySlug(vParameterSlug)
         objItems = objApiService.getObjectByUrl(vParameterSlug)
 
+        Dim vId As String
         Dim vItemName As String
         Dim vTitle As String
         Dim vDefaultValue As String
@@ -799,6 +827,8 @@ Exit_Function:
             If objItem("status") = "D" Then
                 Continue For
             End If
+
+            vId = objItem("id")
             vItemName = objItem("name")
             vTitle = objItem("title")
             vDefaultValue = objItem("default_value")
@@ -810,7 +840,8 @@ Exit_Function:
             Select Case vItemType
                 Case "TEXT"
                     ucText = New ucParaText With {
-                                .parameter = "textbox",
+                                .id = vId,
+                                .parameter = vItemName,'"textbox",
                                 .title = vTitle,
                                 .message = "Testing Mesasge",
                                 .value = vDefaultValue,
@@ -833,7 +864,8 @@ Exit_Function:
                     ucText.showOpject()
                 Case "LIST"
                     ucList = New ucParamList With {
-                        .parameter = "list",
+                        .id = vId,
+                        .parameter = vItemName,'"list",
                         .title = vTitle,
                         .message = "Testing Mesasge",
                         .value = vDefaultValue,
@@ -858,7 +890,8 @@ Exit_Function:
 
                 Case "RADIO"
                     ucRadio = New ucParamRadio With {
-                        .parameter = "choice",
+                        .id = vId,
+                        .parameter = vItemName,'"choice",
                         .title = vTitle,
                         .message = "",
                         .value = vDefaultValue,
@@ -883,7 +916,8 @@ Exit_Function:
                     ucRadio.showOpject()
                 Case "OPTION"
                     ucOption = New ucParamOption With {
-                        .parameter = "option",
+                        .id = vId,
+                        .parameter = vItemName,'"option",
                         .title = vTitle,
                         .message = "",
                         .value = vDefaultValue,
@@ -1056,7 +1090,7 @@ Exit_Function:
             End If
         Next
         CreateObject(gCurrentRouteDetailUrl)
-        getUserOperation(user_id)
+        ' getUserOperation(user_id)
 
 
     End Sub
@@ -1069,10 +1103,10 @@ Exit_Function:
         objApiService.access_token = access_token
         showObjectName()
         tss1.Text = objApiService.Url
-        'Get authorized operation
-        getUserOperation(user_id)
-        'txtSn.Select()
 
+        'getUserOperation(user_id)
+        lblOperation.Text = operationPropertyValue
+        checkOperationType(operationPropertyValue)
 
 
     End Sub
@@ -1081,11 +1115,11 @@ Exit_Function:
         Dim operation As Object = Nothing
 
 
-        cbProduct.Enabled = False
-        lblProduct.Enabled = False
+        'cbProduct.Enabled = False
+        'lblProduct.Enabled = False
 
-        cbWorkOrder.Enabled = False
-        lblWorkOrder.Enabled = False
+        'cbWorkOrder.Enabled = False
+        'lblWorkOrder.Enabled = False
 
         If vOperationId <> "" Then
             operation = objApiService.getJsonObject(vUrl + "/api/operation/" & vOperationId & "/")
@@ -1104,13 +1138,13 @@ Exit_Function:
 
             If operation("operation_type") = "REGISTRATION" Then
 
-                cbWorkOrder.Enabled = True
-                lblWorkOrder.Enabled = True
-                cbProduct.Enabled = True
-                lblProduct.Enabled = True
+                'cbWorkOrder.Enabled = True
+                'lblWorkOrder.Enabled = True
+                'cbProduct.Enabled = True
+                'lblProduct.Enabled = True
 
-                '-----Fill all WorkOrder----
-                getProducts()
+                ''-----Fill all WorkOrder----
+                'getProducts()
                 '---------------------------
             Else
                 gCurrentRegExp = ""
@@ -1120,104 +1154,108 @@ Exit_Function:
         'getItemBySlug = json
     End Sub
 
-    Sub getUserOperation(Optional vUserId As String = "")
-        Dim operations As Object
-        Dim operation As Object
+    'Sub getUserOperation(Optional vUserId As String = "")
+    '    Dim operations As Object
+    '    Dim operation As Object
 
-        'if vUserId is Blank --> get all existing operation
-        'if exist -->get only authorize operation
+    '    'if vUserId is Blank --> get all existing operation
+    '    'if exist -->get only authorize operation
 
-        If vUserId <> "" Then
-            operations = objApiService.getJsonObject(vUrl + "/api/profile/" & vUserId & "/operations/") '("operations")
-        Else
-            operations = objApiService.getJsonObject(vUrl + "/api/operation/")
-        End If
+    '    If vUserId <> "" Then
+    '        operations = objApiService.getJsonObject(vUrl + "/api/profile/" & vUserId & "/operations/") '("operations")
+    '    Else
+    '        operations = objApiService.getJsonObject(vUrl + "/api/operation/")
+    '    End If
 
+    '    Try
+    '        If Not operations Is Nothing Then
+    '            Dim comboSource As New Dictionary(Of String, String)()
 
+    '            comboSource.Add("", "---")
+    '            For Each operation In operations
+    '                comboSource.Add(operation("operation")("name") & ":" &
+    '                                operation("operation")("title"), operation("operation")("slug")
+    '                                )
+    '            Next
+    '            With cbOperation
+    '                .DropDownStyle = ComboBoxStyle.DropDownList
+    '                .DataSource = New BindingSource(comboSource, Nothing)
+    '                .DisplayMember = "Key"
+    '                .ValueMember = "Value"
+    '                '.SelectedValue = vDefaultValue
+    '                .Items.Insert(0, String.Empty)
+    '            End With
+    '        End If
+    '    Catch ex As Exception
 
-
-        If Not operations Is Nothing Then
-            Dim comboSource As New Dictionary(Of String, String)()
-
-            comboSource.Add("", "---")
-            For Each operation In operations
-                comboSource.Add(operation("operation")("name") & ":" &
-                                operation("operation")("title"), operation("operation")("slug")
-                                )
-            Next
-            With cbOperation
-                .DropDownStyle = ComboBoxStyle.DropDownList
-                .DataSource = New BindingSource(comboSource, Nothing)
-                .DisplayMember = "Key"
-                .ValueMember = "Value"
-                '.SelectedValue = vDefaultValue
-                .Items.Insert(0, String.Empty)
-            End With
-        End If
-
-        'getItemBySlug = json
-    End Sub
-
-
-    Sub getProducts(Optional vProduct As String = "")
-        Dim products As Object = Nothing
-        Dim product As Object = Nothing
-
-        products = objApiService.getJsonObject(vUrl + "/api/product/?status=A")("results")
-
-
-
-        If Not products Is Nothing Then
-            Dim comboSource As New Dictionary(Of String, String)()
-            comboSource.Add("", "---")
-            For Each product In products
-                comboSource.Add(product("name") & ":" &
-                                product("title"), product("slug")
-                                )
-            Next
-            With cbProduct
-                .DropDownStyle = ComboBoxStyle.DropDownList
-                .DataSource = New BindingSource(comboSource, Nothing)
-                .DisplayMember = "Key"
-                .ValueMember = "Value"
-            End With
-
-        End If
-
-    End Sub
-
-    Sub getWorkOrders(Optional vProductSlug As String = "")
-        Dim workorders As Object = Nothing
-        Dim workorder As Object = Nothing
-
-        If vProductSlug <> "" Then
-            workorders = objApiService.getJsonObject(vUrl + "/api/workorder/?product__slug=" &
-                                                     vProductSlug & "&status=A")("results")
-        End If
+    '    End Try
 
 
 
 
-        If Not workorders Is Nothing Then
-            Dim comboSource As New Dictionary(Of String, String)()
+    '    'getItemBySlug = json
+    'End Sub
 
-            comboSource.Add("", "---")
-            For Each workorder In workorders
-                comboSource.Add(workorder("name") & ":" &
-                                workorder("title"), workorder("slug")
-                                )
-            Next
-            With cbWorkOrder
-                .DropDownStyle = ComboBoxStyle.DropDownList
-                .DataSource = New BindingSource(comboSource, Nothing)
-                .DisplayMember = "Key"
-                .ValueMember = "Value"
-            End With
-        Else
-            cbWorkOrder.DataSource = Nothing
-        End If
 
-    End Sub
+    'Sub getProducts(Optional vProduct As String = "")
+    '    Dim products As Object = Nothing
+    '    Dim product As Object = Nothing
+
+    '    products = objApiService.getJsonObject(vUrl + "/api/product/?status=A")("results")
+
+
+
+    '    If Not products Is Nothing Then
+    '        Dim comboSource As New Dictionary(Of String, String)()
+    '        comboSource.Add("", "---")
+    '        For Each product In products
+    '            comboSource.Add(product("name") & ":" &
+    '                            product("title"), product("slug")
+    '                            )
+    '        Next
+    '        With cbProduct
+    '            .DropDownStyle = ComboBoxStyle.DropDownList
+    '            .DataSource = New BindingSource(comboSource, Nothing)
+    '            .DisplayMember = "Key"
+    '            .ValueMember = "Value"
+    '        End With
+
+    '    End If
+
+    'End Sub
+
+    'Sub getWorkOrders(Optional vProductSlug As String = "")
+    '    Dim workorders As Object = Nothing
+    '    Dim workorder As Object = Nothing
+
+    '    If vProductSlug <> "" Then
+    '        workorders = objApiService.getJsonObject(vUrl + "/api/workorder/?product__slug=" &
+    '                                                 vProductSlug & "&status=A")("results")
+    '    End If
+
+
+
+
+    '    If Not workorders Is Nothing Then
+    '        Dim comboSource As New Dictionary(Of String, String)()
+
+    '        comboSource.Add("", "---")
+    '        For Each workorder In workorders
+    '            comboSource.Add(workorder("name") & ":" &
+    '                            workorder("title"), workorder("slug")
+    '                            )
+    '        Next
+    '        With cbWorkOrder
+    '            .DropDownStyle = ComboBoxStyle.DropDownList
+    '            .DataSource = New BindingSource(comboSource, Nothing)
+    '            .DisplayMember = "Key"
+    '            .ValueMember = "Value"
+    '        End With
+    '    Else
+    '        cbWorkOrder.DataSource = Nothing
+    '    End If
+
+    'End Sub
 
     Sub reset()
         clearCurrentRoutingDisplay()
@@ -1236,7 +1274,7 @@ Exit_Function:
             aa.Dispose()
         Next
 
-
+        txtComment.Text = ""
         txtSn.Enabled = True
         txtSn.Select(0, txtSn.Text.Length)
         txtSn.Select()
@@ -1250,6 +1288,7 @@ Exit_Function:
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Try
+            reset()
             '--Hook --PRE
             If Not executeHook("PRE", btnCancel.Name) Then
                 Exit Sub
@@ -1257,10 +1296,10 @@ Exit_Function:
             '------------
 
             If gSerialNumber("perform_resource") = gHostName Then
-                setPerformSerialNumber(False, cbOperation.SelectedValue)
+                setPerformSerialNumber(False, gOperationSlug)
             End If
 
-            reset()
+
 
             '--Hook POST
             If Not executeHook("POST", btnCancel.Name) Then
@@ -1299,16 +1338,56 @@ Exit_Function:
         End If
 
         '--Do transaction
-        doPerforming(vMoveTo, False)
+        Dim iPerforming As Long
+        iPerforming = doPerforming(vMoveTo, False)
+        '--Do Parameter trasaction--
+        addParametric(iPerforming, user_id)
 
         '--Hook --POST
         If Not executeHook("POST", btnFail.Name) Then
             Exit Sub
         End If
 
+        reset()
     End Sub
 
+    Private Function addParametric(strPerforming As Integer, strUser As String) As Boolean
+        'Dim strId As String
+        'Dim strKey As String
+        'Dim strValue As String
+        Dim aa As Object
+        Dim controlList As New List(Of Object)
+        For Each aa In Me.Controls
+            If (TypeOf aa Is mp.ucParaText) Or (TypeOf aa Is mp.ucParamList) _
+                Or (TypeOf aa Is mp.ucParamOption) Or (TypeOf aa Is mp.ucParamRadio) Then
+                'aa.Dispose()
+                Dim parametric As New clsParametricJson
+                With parametric
+                    .performing = strPerforming
+                    .item = aa.id
+                    .value = aa.value
+                    .user = user_id
+                End With
+
+                Dim output As String = ""
+                Dim objResponse As Object
+                output = JsonConvert.SerializeObject(parametric)
+                objResponse = objApiService.SendRequest(vUrl & "/api/parametric/", output)
+
+
+                'strId = aa.id
+                'strKey = aa.name
+                'strValue = aa.value
+            End If
+        Next
+        Return False
+    End Function
+
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
+        '--------------------
+
+
+        '--------------------
         Dim vMoveTo As String = checkNextCondition(gNextPass)
         If vMoveTo <> gNextPass Then
             If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
@@ -1326,13 +1405,22 @@ Exit_Function:
         End If
 
         '--Do transaction
-        doPerforming(vMoveTo, True)
+        'doPerforming(vMoveTo, True)
+        Dim iPerforming As Long
+        iPerforming = doPerforming(vMoveTo, True)
+
+
+        '--Do Parameter trasaction--
+        addParametric(iPerforming, user_id)
+
+
 
         '--Hook --POST
         If Not executeHook("POST", btnPass.Name) Then
             Exit Sub
         End If
 
+        reset()
     End Sub
 
     Function executeHook(vEvent As String, vControlName As String) As Boolean
@@ -1375,7 +1463,7 @@ Exit_Function:
         Return True
     End Function
 
-    Function doPerforming(vMoveToOperation As String, result As Boolean) As Boolean
+    Function doPerforming(vMoveToOperation As String, result As Boolean) As Long
         '----Performing---
         Dim vNote As String = txtComment.Text
         Dim vSnMasterId As Integer
@@ -1390,6 +1478,7 @@ Exit_Function:
             .remark = vNote
             .start_time = gSerialNumber("perform_start_date")
             .stop_time = Now.ToLocalTime.ToString("o")
+            .user = user_id
         End With
         Dim output As String = ""
         Dim objResponse As Object
@@ -1399,8 +1488,11 @@ Exit_Function:
         x = objResponse("uid")
         '-----------------------
         updateSerialNumber(vMoveToOperation, gOperationName, result)
-        reset()
-        Return True
+
+
+
+        'reset()
+        Return objResponse("id")
     End Function
 
     Function updateSerialNumber(moveToOperation As String,
@@ -1424,6 +1516,10 @@ Exit_Function:
         Dim objSnReturned As Object
         objSnReturned = objApiService.SendRequest(gSerialNumber("url"), strUpdateJson,
                                                   "application/json", "PUT")
+
+        gSerialNumberSlug = gSerialNumber("slug")
+        tssSn.Text = gSerialNumber("number") & " move to : " & moveToOperation
+
         Return True
     End Function
 
@@ -1625,42 +1721,44 @@ Exit_Function:
 
 
 
-    Private Sub cbWorkOrder_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cbWorkOrder.SelectionChangeCommitted
-        Try
-            Dim key As String = DirectCast(cbWorkOrder.SelectedItem, KeyValuePair(Of String, String)).Key
-            Dim value As String = DirectCast(cbWorkOrder.SelectedItem, KeyValuePair(Of String, String)).Value
-            Dim Productvalue As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Value
-            Dim Operationvalue As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value
-            If key = "" Then
-                Exit Sub
-            End If
-            verifyCurrentRouting(Operationvalue, Productvalue, value)
-        Catch ex As Exception
+    'Private Sub cbWorkOrder_SelectionChangeCommitted(sender As Object, e As EventArgs) 
+    '    Try
+    '        Dim key As String = DirectCast(cbWorkOrder.SelectedItem, KeyValuePair(Of String, String)).Key
+    '        Dim value As String = DirectCast(cbWorkOrder.SelectedItem, KeyValuePair(Of String, String)).Value
+    '        Dim Productvalue As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Value
+    '        'Dim Operationvalue As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value
+    '        If key = "" Then
+    '            Exit Sub
+    '        End If
+    '        verifyCurrentRouting(gOperationSlug, Productvalue, value)
+    '    Catch ex As Exception
 
-        End Try
-    End Sub
+    '    End Try
+    'End Sub
 
-    Private Sub cbProduct_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cbProduct.SelectionChangeCommitted
-        Dim key As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Key
-        Dim ProductSlug As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
-        Dim OperationSlug As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
-        If key = "" Then
-            Exit Sub
-        End If
-        getWorkOrders(ProductSlug)
-        verifyCurrentRouting(OperationSlug, ProductSlug, "")
-    End Sub
+    'Private Sub cbProduct_SelectionChangeCommitted(sender As Object, e As EventArgs) 
+    '    Dim key As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Key
+    '    Dim ProductSlug As String = DirectCast(cbProduct.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
 
-    Private Sub cbOperation_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cbOperation.SelectionChangeCommitted
-        clearCurrentRoutingDisplay()
-        Dim key As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Key
-        Dim value As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
-        If key = "" Then
-            Exit Sub
-        End If
-        checkOperationType(value)
-        ' ValueType = (KeyValuePair(Of key, value))cbOperation.SelectedItem).
-    End Sub
+    '    'Dim OperationSlug As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
+
+    '    If key = "" Then
+    '        Exit Sub
+    '    End If
+    '    getWorkOrders(ProductSlug)
+    '    verifyCurrentRouting(gOperationSlug, ProductSlug, "")
+    'End Sub
+
+    'Private Sub cbOperation_SelectionChangeCommitted(sender As Object, e As EventArgs)
+    '    clearCurrentRoutingDisplay()
+    '    Dim key As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Key
+    '    Dim value As String = DirectCast(cbOperation.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
+    '    If key = "" Then
+    '        Exit Sub
+    '    End If
+    '    checkOperationType(value)
+    '    ' ValueType = (KeyValuePair(Of key, value))cbOperation.SelectedItem).
+    'End Sub
 
 
 
@@ -1726,7 +1824,7 @@ Exit_Function:
 
     End Sub
 
-    Private Sub cbWorkOrder_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbWorkOrder.SelectedIndexChanged
+    Private Sub cbWorkOrder_SelectedIndexChanged(sender As Object, e As EventArgs) 
 
     End Sub
 
@@ -1734,6 +1832,19 @@ Exit_Function:
         'Open URL
         Process.Start(vUrl & "/routing/detail/" & gCurrentRouteDetailSlug)
 
+    End Sub
+
+    Private Sub tssSn_Click(sender As Object, e As EventArgs) Handles tssSn.Click
+        Process.Start(vUrl & "/serialnumber/" & gSerialNumberSlug)
+    End Sub
+
+    Private Sub cbOperation_SelectedIndexChanged(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub btnSnippet_Click(sender As Object, e As EventArgs) Handles btnSnippet.Click
+        frmSnippet.targetForm = Me
+        frmSnippet.Show()
     End Sub
 
 

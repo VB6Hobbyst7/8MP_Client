@@ -105,6 +105,12 @@
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmInspection.Designer.vb">
+      <DependentUpon>frmInspection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmInspection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmLoginForm.Designer.vb">
       <DependentUpon>frmLoginForm.vb</DependentUpon>
     </Compile>
@@ -115,6 +121,12 @@
       <DependentUpon>frmParameter.vb</DependentUpon>
     </Compile>
     <Compile Include="frmParameter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSnippet.Designer.vb">
+      <DependentUpon>frmSnippet.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmSnippet.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mdlWMP.vb" />
@@ -177,11 +189,17 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmInspection.resx">
+      <DependentUpon>frmInspection.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmLoginForm.resx">
       <DependentUpon>frmLoginForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmParameter.resx">
       <DependentUpon>frmParameter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSnippet.resx">
+      <DependentUpon>frmSnippet.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

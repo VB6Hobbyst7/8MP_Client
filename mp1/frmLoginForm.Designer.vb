@@ -40,8 +40,8 @@ Partial Class frmLoginForm
         Me.Cancel = New System.Windows.Forms.Button()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.cbOperation = New System.Windows.Forms.ComboBox()
         Me.btnOpen = New System.Windows.Forms.Button()
+        Me.cbOperation = New System.Windows.Forms.ComboBox()
         CType(Me.LogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -99,6 +99,7 @@ Partial Class frmLoginForm
         'Cancel
         '
         Me.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.Cancel.Enabled = False
         Me.Cancel.Location = New System.Drawing.Point(299, 147)
         Me.Cancel.Name = "Cancel"
         Me.Cancel.Size = New System.Drawing.Size(94, 23)
@@ -125,6 +126,16 @@ Partial Class frmLoginForm
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Operation"
         '
+        'btnOpen
+        '
+        Me.btnOpen.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnOpen.Enabled = False
+        Me.btnOpen.Location = New System.Drawing.Point(296, 19)
+        Me.btnOpen.Name = "btnOpen"
+        Me.btnOpen.Size = New System.Drawing.Size(94, 26)
+        Me.btnOpen.TabIndex = 9
+        Me.btnOpen.Text = "Open"
+        '
         'cbOperation
         '
         Me.cbOperation.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -133,15 +144,6 @@ Partial Class frmLoginForm
         Me.cbOperation.Name = "cbOperation"
         Me.cbOperation.Size = New System.Drawing.Size(284, 26)
         Me.cbOperation.TabIndex = 8
-        '
-        'btnOpen
-        '
-        Me.btnOpen.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnOpen.Location = New System.Drawing.Point(296, 19)
-        Me.btnOpen.Name = "btnOpen"
-        Me.btnOpen.Size = New System.Drawing.Size(94, 26)
-        Me.btnOpen.TabIndex = 9
-        Me.btnOpen.Text = "Open"
         '
         'frmLoginForm
         '

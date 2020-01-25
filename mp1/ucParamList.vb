@@ -54,6 +54,8 @@ Public Class ucParamList
     End Property
 
     Private vDefaultValue As String
+
+    <System.ComponentModel.DefaultValue(True)>
     Public Property value() As String
         Get
             Return vDefaultValue

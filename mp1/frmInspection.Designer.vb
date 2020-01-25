@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class frmParameter
+Partial Class frmInspection
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -38,10 +38,6 @@ Partial Class frmParameter
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnPass = New System.Windows.Forms.Button()
         Me.btnFail = New System.Windows.Forms.Button()
-        Me.cbWorkOrder = New System.Windows.Forms.ComboBox()
-        Me.lblWorkOrder = New System.Windows.Forms.Label()
-        Me.cbProduct = New System.Windows.Forms.ComboBox()
-        Me.lblProduct = New System.Windows.Forms.Label()
         Me.lblCapNextPass = New System.Windows.Forms.Label()
         Me.lblCapNextFail = New System.Windows.Forms.Label()
         Me.lblCapRoute = New System.Windows.Forms.Label()
@@ -54,12 +50,13 @@ Partial Class frmParameter
         Me.timerExp = New System.Windows.Forms.Timer(Me.components)
         Me.btnNew = New System.Windows.Forms.Button()
         Me.lblOperation = New System.Windows.Forms.Label()
+        Me.btnSnippet = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnStart
         '
-        Me.btnStart.Location = New System.Drawing.Point(417, 68)
+        Me.btnStart.Location = New System.Drawing.Point(417, 29)
         Me.btnStart.Name = "btnStart"
         Me.btnStart.Size = New System.Drawing.Size(109, 26)
         Me.btnStart.TabIndex = 0
@@ -70,7 +67,7 @@ Partial Class frmParameter
         'btnRefresh
         '
         Me.btnRefresh.Enabled = False
-        Me.btnRefresh.Location = New System.Drawing.Point(646, 68)
+        Me.btnRefresh.Location = New System.Drawing.Point(646, 29)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(109, 26)
         Me.btnRefresh.TabIndex = 1
@@ -82,7 +79,7 @@ Partial Class frmParameter
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(15, 74)
+        Me.Label1.Location = New System.Drawing.Point(15, 35)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(150, 20)
         Me.Label1.TabIndex = 2
@@ -91,7 +88,7 @@ Partial Class frmParameter
         'txtSn
         '
         Me.txtSn.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSn.Location = New System.Drawing.Point(171, 68)
+        Me.txtSn.Location = New System.Drawing.Point(171, 29)
         Me.txtSn.Name = "txtSn"
         Me.txtSn.Size = New System.Drawing.Size(240, 26)
         Me.txtSn.TabIndex = 3
@@ -99,7 +96,7 @@ Partial Class frmParameter
         'txtComment
         '
         Me.txtComment.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtComment.Location = New System.Drawing.Point(171, 124)
+        Me.txtComment.Location = New System.Drawing.Point(171, 85)
         Me.txtComment.Multiline = True
         Me.txtComment.Name = "txtComment"
         Me.txtComment.Size = New System.Drawing.Size(240, 67)
@@ -110,7 +107,7 @@ Partial Class frmParameter
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(78, 124)
+        Me.Label2.Location = New System.Drawing.Point(78, 85)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(86, 20)
         Me.Label2.TabIndex = 5
@@ -159,7 +156,7 @@ Partial Class frmParameter
         '
         'btnCancel
         '
-        Me.btnCancel.Location = New System.Drawing.Point(532, 68)
+        Me.btnCancel.Location = New System.Drawing.Point(532, 29)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(109, 26)
         Me.btnCancel.TabIndex = 9
@@ -191,49 +188,11 @@ Partial Class frmParameter
         Me.btnFail.Text = "Fail"
         Me.btnFail.UseVisualStyleBackColor = True
         '
-        'cbWorkOrder
-        '
-        Me.cbWorkOrder.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbWorkOrder.FormattingEnabled = True
-        Me.cbWorkOrder.Location = New System.Drawing.Point(516, 36)
-        Me.cbWorkOrder.Name = "cbWorkOrder"
-        Me.cbWorkOrder.Size = New System.Drawing.Size(239, 26)
-        Me.cbWorkOrder.TabIndex = 12
-        '
-        'lblWorkOrder
-        '
-        Me.lblWorkOrder.AutoSize = True
-        Me.lblWorkOrder.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblWorkOrder.Location = New System.Drawing.Point(416, 38)
-        Me.lblWorkOrder.Name = "lblWorkOrder"
-        Me.lblWorkOrder.Size = New System.Drawing.Size(94, 20)
-        Me.lblWorkOrder.TabIndex = 13
-        Me.lblWorkOrder.Text = "WorkOrder :"
-        '
-        'cbProduct
-        '
-        Me.cbProduct.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbProduct.FormattingEnabled = True
-        Me.cbProduct.Location = New System.Drawing.Point(171, 38)
-        Me.cbProduct.Name = "cbProduct"
-        Me.cbProduct.Size = New System.Drawing.Size(239, 26)
-        Me.cbProduct.TabIndex = 14
-        '
-        'lblProduct
-        '
-        Me.lblProduct.AutoSize = True
-        Me.lblProduct.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct.Location = New System.Drawing.Point(93, 38)
-        Me.lblProduct.Name = "lblProduct"
-        Me.lblProduct.Size = New System.Drawing.Size(72, 20)
-        Me.lblProduct.TabIndex = 15
-        Me.lblProduct.Text = "Product :"
-        '
         'lblCapNextPass
         '
         Me.lblCapNextPass.AutoSize = True
         Me.lblCapNextPass.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCapNextPass.Location = New System.Drawing.Point(416, 151)
+        Me.lblCapNextPass.Location = New System.Drawing.Point(416, 112)
         Me.lblCapNextPass.Name = "lblCapNextPass"
         Me.lblCapNextPass.Size = New System.Drawing.Size(88, 20)
         Me.lblCapNextPass.TabIndex = 16
@@ -244,7 +203,7 @@ Partial Class frmParameter
         '
         Me.lblCapNextFail.AutoSize = True
         Me.lblCapNextFail.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCapNextFail.Location = New System.Drawing.Point(422, 171)
+        Me.lblCapNextFail.Location = New System.Drawing.Point(422, 132)
         Me.lblCapNextFail.Name = "lblCapNextFail"
         Me.lblCapNextFail.Size = New System.Drawing.Size(82, 20)
         Me.lblCapNextFail.TabIndex = 17
@@ -255,7 +214,7 @@ Partial Class frmParameter
         '
         Me.lblCapRoute.AutoSize = True
         Me.lblCapRoute.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCapRoute.Location = New System.Drawing.Point(431, 131)
+        Me.lblCapRoute.Location = New System.Drawing.Point(431, 92)
         Me.lblCapRoute.Name = "lblCapRoute"
         Me.lblCapRoute.Size = New System.Drawing.Size(73, 20)
         Me.lblCapRoute.TabIndex = 18
@@ -266,7 +225,7 @@ Partial Class frmParameter
         '
         Me.lblRouting.AutoSize = True
         Me.lblRouting.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRouting.Location = New System.Drawing.Point(501, 131)
+        Me.lblRouting.Location = New System.Drawing.Point(501, 92)
         Me.lblRouting.Name = "lblRouting"
         Me.lblRouting.Size = New System.Drawing.Size(21, 20)
         Me.lblRouting.TabIndex = 19
@@ -277,7 +236,7 @@ Partial Class frmParameter
         '
         Me.lblNextPass.AutoSize = True
         Me.lblNextPass.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblNextPass.Location = New System.Drawing.Point(501, 151)
+        Me.lblNextPass.Location = New System.Drawing.Point(501, 112)
         Me.lblNextPass.Name = "lblNextPass"
         Me.lblNextPass.Size = New System.Drawing.Size(21, 20)
         Me.lblNextPass.TabIndex = 20
@@ -288,7 +247,7 @@ Partial Class frmParameter
         '
         Me.lblnextFail.AutoSize = True
         Me.lblnextFail.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblnextFail.Location = New System.Drawing.Point(501, 171)
+        Me.lblnextFail.Location = New System.Drawing.Point(501, 132)
         Me.lblnextFail.Name = "lblnextFail"
         Me.lblnextFail.Size = New System.Drawing.Size(21, 20)
         Me.lblnextFail.TabIndex = 21
@@ -298,7 +257,7 @@ Partial Class frmParameter
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(171, 97)
+        Me.Label4.Location = New System.Drawing.Point(171, 58)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(64, 13)
         Me.Label4.TabIndex = 22
@@ -307,7 +266,7 @@ Partial Class frmParameter
         'lblUnitFormat
         '
         Me.lblUnitFormat.AutoSize = True
-        Me.lblUnitFormat.Location = New System.Drawing.Point(232, 97)
+        Me.lblUnitFormat.Location = New System.Drawing.Point(232, 58)
         Me.lblUnitFormat.Name = "lblUnitFormat"
         Me.lblUnitFormat.Size = New System.Drawing.Size(13, 13)
         Me.lblUnitFormat.TabIndex = 23
@@ -328,7 +287,7 @@ Partial Class frmParameter
         '
         'btnNew
         '
-        Me.btnNew.Location = New System.Drawing.Point(417, 97)
+        Me.btnNew.Location = New System.Drawing.Point(417, 58)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.Size = New System.Drawing.Size(109, 26)
         Me.btnNew.TabIndex = 25
@@ -346,11 +305,22 @@ Partial Class frmParameter
         Me.lblOperation.TabIndex = 26
         Me.lblOperation.Text = "Operation :"
         '
-        'frmParameter
+        'btnSnippet
+        '
+        Me.btnSnippet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSnippet.Location = New System.Drawing.Point(779, 3)
+        Me.btnSnippet.Name = "btnSnippet"
+        Me.btnSnippet.Size = New System.Drawing.Size(20, 22)
+        Me.btnSnippet.TabIndex = 27
+        Me.btnSnippet.Text = "S"
+        Me.btnSnippet.UseVisualStyleBackColor = True
+        '
+        'frmInspection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(799, 566)
+        Me.Controls.Add(Me.btnSnippet)
         Me.Controls.Add(Me.lblOperation)
         Me.Controls.Add(Me.btnNew)
         Me.Controls.Add(Me.lblExpToken)
@@ -362,10 +332,6 @@ Partial Class frmParameter
         Me.Controls.Add(Me.lblCapRoute)
         Me.Controls.Add(Me.lblCapNextFail)
         Me.Controls.Add(Me.lblCapNextPass)
-        Me.Controls.Add(Me.lblProduct)
-        Me.Controls.Add(Me.cbProduct)
-        Me.Controls.Add(Me.lblWorkOrder)
-        Me.Controls.Add(Me.cbWorkOrder)
         Me.Controls.Add(Me.btnFail)
         Me.Controls.Add(Me.btnPass)
         Me.Controls.Add(Me.btnCancel)
@@ -377,10 +343,9 @@ Partial Class frmParameter
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnStart)
-        Me.Name = "frmParameter"
+        Me.Name = "frmInspection"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Tag = ""
-        Me.Text = "8MP -- Register"
+        Me.Text = "8MP -- Inspection"
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -402,10 +367,6 @@ Partial Class frmParameter
     Friend WithEvents btnCancel As Button
     Friend WithEvents btnPass As Button
     Friend WithEvents btnFail As Button
-    Friend WithEvents cbWorkOrder As ComboBox
-    Friend WithEvents lblWorkOrder As Label
-    Friend WithEvents cbProduct As ComboBox
-    Friend WithEvents lblProduct As Label
     Friend WithEvents lblCapNextPass As Label
     Friend WithEvents lblCapNextFail As Label
     Friend WithEvents lblCapRoute As Label
@@ -419,4 +380,5 @@ Partial Class frmParameter
     Friend WithEvents btnNew As Button
     Friend WithEvents tssSn As ToolStripStatusLabel
     Friend WithEvents lblOperation As Label
+    Friend WithEvents btnSnippet As Button
 End Class
