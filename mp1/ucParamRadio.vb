@@ -53,7 +53,7 @@ Public Class ucParamRadio
 
     Private vDefaultValue As String
 
-    <System.ComponentModel.DefaultValue(True)>
+    <DefaultValue(True)>
     Public Property value() As String
         Get
             Return vDefaultValue
@@ -342,7 +342,7 @@ Public Class ucParamRadio
         iObject = objApiService.getObjectBySlug("item", vSlug_) 'getItemBySlug(vSlug_)
         iListObj = iObject("lists")
         Dim comboSource As New Dictionary(Of String, String)()
-        Dim vDefaultValue As String = ""
+        'Dim vDefaultValue As String = ""
         Dim vPosBottom As Integer = 0
         Dim vRadioIndex As Integer = 0
         Dim vXFirstCol As Integer = 160
@@ -360,6 +360,11 @@ Public Class ucParamRadio
 
             vOrdered = objEachChoice("ordered")
             vStatus = objEachChoice("status")
+
+            If vDefault Then
+                vDefaultValue = vValue
+            End If
+
             If vStatus = "A" Then
                 ca = vRadioIndex Mod 2
                 If ca = 0 Then

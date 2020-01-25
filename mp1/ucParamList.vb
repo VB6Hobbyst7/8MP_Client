@@ -55,7 +55,7 @@ Public Class ucParamList
 
     Private vDefaultValue As String
 
-    <System.ComponentModel.DefaultValue(True)>
+    <DefaultValue(True)>
     Public Property value() As String
         Get
             Return vDefaultValue
@@ -335,7 +335,7 @@ Public Class ucParamList
         iObject = objApiService.getObjectBySlug("item", vSlug_)
         iListObj = iObject("lists")
         Dim comboSource As New Dictionary(Of String, String)()
-        Dim vDefaultValue As String = ""
+        'Dim vDefaultValue As String = ""
         Dim objEachChoice As Object
         For Each aa In iListObj
             objEachChoice = objApiService.getObjectByUrl(aa)
