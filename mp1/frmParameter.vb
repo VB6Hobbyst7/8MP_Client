@@ -43,6 +43,8 @@ Public Class frmParameter
     Dim gSerialNumber As Object
     Dim gSerialNumberSlug As String
 
+    Dim gPerformingNumber As Long
+
     Private operationPropertyValue As String
     Public Property operation() As String
         Get
@@ -330,7 +332,7 @@ Public Class frmParameter
         btnStart.Enabled = False
         btnCancel.Enabled = True
         btnPass.Enabled = True
-        btnFail.Enabled = True
+        'btnFail.Enabled = True
 
     End Sub
 
@@ -354,6 +356,9 @@ Public Class frmParameter
             vNextPass = objRouteDetail("results")(0)("next_pass")
             vNexFail = objRouteDetail("results")(0)("next_fail")
         End If
+
+        gNextPass = vNextPass
+        gNextFail = vNexFail
 
         ' Dim objLastOperation As Object = objApiService.getObjectBySlug("operation", vOperation)
 
@@ -397,6 +402,7 @@ Public Class frmParameter
         objResponse = objApiService.SendRequest(vUrl & "/api/performing/", output)
         Dim x As String
         x = objResponse("uid")
+        gPerformingNumber = objResponse("id")
 
         '-----------------------
         Return True
@@ -1239,7 +1245,7 @@ Exit_Function:
     End Sub
 
     Sub reset()
-        clearCurrentRoutingDisplay()
+        'clearCurrentRoutingDisplay()
         Dim aa As Object
         Dim controlList As New List(Of Object)
         For Each aa In Me.Controls
@@ -1263,7 +1269,7 @@ Exit_Function:
         btnRefresh.Enabled = False
 
         btnPass.Enabled = False
-        btnFail.Enabled = False
+        'btnFail.Enabled = False
         btnCancel.Enabled = False
 
         btnStart.Enabled = True
@@ -1304,36 +1310,36 @@ Exit_Function:
         End If
     End Sub
 
-    Private Sub btnFail_Click(sender As Object, e As EventArgs) Handles btnFail.Click
-        'checkNextCondition(vDefaultNextFailOperation)
-        Dim vMoveTo As String = checkNextCondition(gNextFail)
-        If vMoveTo <> gNextFail Then
-            If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
-                   "System will move unit to operation " & vMoveTo,
-                   MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
-                MsgBox("cancel")
-            End If
-        End If
+    'Private Sub btnFail_Click(sender As Object, e As EventArgs)
+    '    'checkNextCondition(vDefaultNextFailOperation)
+    '    Dim vMoveTo As String = checkNextCondition(gNextFail)
+    '    If vMoveTo <> gNextFail Then
+    '        If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+    '               "System will move unit to operation " & vMoveTo,
+    '               MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+    '            MsgBox("cancel")
+    '        End If
+    '    End If
 
 
-        '--Hook --PRE
-        If Not executeHook("PRE", btnFail.Name) Then
-            Exit Sub
-        End If
+    '    '--Hook --PRE
+    '    If Not executeHook("PRE", btnFail.Name) Then
+    '        Exit Sub
+    '    End If
 
-        '--Do transaction
-        Dim iPerforming As Long
-        iPerforming = doPerforming(vMoveTo, False)
-        '--Do Parameter trasaction--
-        addParametric(iPerforming, user_id)
+    '    '--Do transaction
+    '    Dim iPerforming As Long
+    '    iPerforming = doPerforming(vMoveTo, False)
+    '    '--Do Parameter trasaction--
+    '    addParametric(iPerforming, user_id)
 
-        '--Hook --POST
-        If Not executeHook("POST", btnFail.Name) Then
-            Exit Sub
-        End If
+    '    '--Hook --POST
+    '    If Not executeHook("POST", btnFail.Name) Then
+    '        Exit Sub
+    '    End If
 
-        reset()
-    End Sub
+    '    reset()
+    'End Sub
 
     Private Function addParametric(strPerforming As Integer, strUser As String) As Boolean
         'Dim strId As String
@@ -1368,34 +1374,49 @@ Exit_Function:
     End Function
 
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
-        '--------------------
-
-
-        '--------------------
-        Dim vMoveTo As String = checkNextCondition(gNextPass)
-        If vMoveTo <> gNextPass Then
-            If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
-                   "System will move unit to operation " & vMoveTo,
-                   MsgBoxStyle.YesNo + +MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
-                MsgBox("cancel")
-                Exit Sub
-            End If
-
-        End If
-
         '--Hook --PRE
         If Not executeHook("PRE", btnPass.Name) Then
             Exit Sub
         End If
 
-        '--Do transaction
-        'doPerforming(vMoveTo, True)
-        Dim iPerforming As Long
-        iPerforming = doPerforming(vMoveTo, True)
+        Dim vSerialNumber As String = txtSn.Text
+
+        If registerSerialNUmber(vSerialNumber, gWorkOrdername,
+                                gOperationName, gCurrentRoute, txtComment.Text) Then
 
 
-        '--Do Parameter trasaction--
-        addParametric(iPerforming, user_id)
+            '--Do transaction
+            '--------------------
+            'Dim vMoveTo As String = checkNextCondition(gNextPass)
+            'If vMoveTo <> gNextPass Then
+            '    If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+            '       "System will move unit to operation " & vMoveTo,
+            '       MsgBoxStyle.YesNo + +MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+            '        MsgBox("cancel")
+            '        Exit Sub
+            '    End If
+
+            'End If
+            'doPerforming(vMoveTo, True)
+            'Dim iPerforming As Long
+            'iPerforming = doPerforming(gNextPass, True)
+
+
+            '--Do Parameter trasaction--
+            addParametric(gPerformingNumber, user_id)
+
+
+
+            MsgBox("Register unit : " & vSerialNumber & " has been done.", MsgBoxStyle.Information, "Register done")
+            btnStart.Enabled = False
+            btnRefresh.Enabled = True
+            txtSn.Text = ""
+            txtSn.Select()
+        Else
+            MsgBox("Register unit : " & vSerialNumber & " failed.", MsgBoxStyle.Critical, "Register failed")
+        End If
+
+
 
 
 

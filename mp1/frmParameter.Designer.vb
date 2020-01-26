@@ -38,7 +38,6 @@ Partial Class frmParameter
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnPass = New System.Windows.Forms.Button()
-        Me.btnFail = New System.Windows.Forms.Button()
         Me.cbWorkOrder = New System.Windows.Forms.ComboBox()
         Me.lblWorkOrder = New System.Windows.Forms.Label()
         Me.cbProduct = New System.Windows.Forms.ComboBox()
@@ -180,18 +179,6 @@ Partial Class frmParameter
         Me.btnPass.TabStop = False
         Me.btnPass.Text = "Pass"
         Me.btnPass.UseVisualStyleBackColor = True
-        '
-        'btnFail
-        '
-        Me.btnFail.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFail.Enabled = False
-        Me.btnFail.Location = New System.Drawing.Point(563, 500)
-        Me.btnFail.Name = "btnFail"
-        Me.btnFail.Size = New System.Drawing.Size(109, 41)
-        Me.btnFail.TabIndex = 11
-        Me.btnFail.TabStop = False
-        Me.btnFail.Text = "Fail"
-        Me.btnFail.UseVisualStyleBackColor = True
         '
         'cbWorkOrder
         '
@@ -379,7 +366,6 @@ Partial Class frmParameter
         Me.Controls.Add(Me.cbProduct)
         Me.Controls.Add(Me.lblWorkOrder)
         Me.Controls.Add(Me.cbWorkOrder)
-        Me.Controls.Add(Me.btnFail)
         Me.Controls.Add(Me.btnPass)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.Label3)
@@ -415,7 +401,6 @@ Partial Class frmParameter
     Friend WithEvents tss2 As ToolStripStatusLabel
     Friend WithEvents btnCancel As Button
     Friend WithEvents btnPass As Button
-    Friend WithEvents btnFail As Button
     Friend WithEvents cbWorkOrder As ComboBox
     Friend WithEvents lblWorkOrder As Label
     Friend WithEvents cbProduct As ComboBox
