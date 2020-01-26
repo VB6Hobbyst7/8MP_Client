@@ -23,6 +23,7 @@ Partial Class frmInspection
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInspection))
         Me.btnStart = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -343,9 +344,10 @@ Partial Class frmInspection
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnStart)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmInspection"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "8MP -- Inspection"
+        Me.Text = "8MP -- Inspection Module"
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)

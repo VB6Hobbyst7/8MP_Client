@@ -243,74 +243,78 @@ Public Class frmParameter
             End If
             '------------
 
+            'Show Parameter
+            CreateObject(gCurrentRouteDetailUrl)
 
 
-            If registerSerialNUmber(vSerialNumber, gWorkOrdername,
-                                    gOperationName, gCurrentRoute, txtComment.Text) Then
-                MsgBox("Register unit : " & vSerialNumber & " has been done.", MsgBoxStyle.Information, "Register done")
-                btnStart.Enabled = False
-                btnRefresh.Enabled = True
-                txtSn.Text = ""
-                txtSn.Select()
-            Else
-                MsgBox("Register unit : " & vSerialNumber & " failed.", MsgBoxStyle.Critical, "Register failed")
-            End If
-        Else
-            '-----Not Registration--
-            If objSn Is Nothing Then
-                MsgBox(vSerialNumber & " does not exist in system or not in WIP",
-                       MsgBoxStyle.Critical, "Not found unit serial number")
-                txtSn.Select(0, txtSn.TextLength)
-                Exit Sub
-            End If
-
-            gSerialNumber = objSn
-
-            Dim vWorkOrder As String = objSn("workorder")
-
-            If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
-                txtSn.Select(0, txtSn.TextLength)
-                Exit Sub
-            End If
-
-            '--Hook --PRE
-            If Not executeHook("PRE", btnStart.Name) Then
-                Exit Sub
-            End If
-            '------------
-
-
-
-            '---Check perform---
-            If objSn("perform_resource") <> "" Then
-                If objSn("perform_resource") <> gHostName Then
-                    MsgBox(vSerialNumber & " is performing on " & objSn("perform_resource"),
-                       MsgBoxStyle.Critical, "On performing")
-                    txtSn.Select(0, txtSn.TextLength)
-                    Exit Sub
-                End If
-            Else
-                '---Stamp Perform
-                setPerformSerialNumber(True, vSelectedOpr)
-            End If
-            '-------------------
-
-
-
-
-            'Dim vWorkOrder As String = objSn("workorder")
-            'If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
-            '    txtSn.Select(0, txtSn.TextLength)
-            '    Exit Sub
+            'If registerSerialNUmber(vSerialNumber, gWorkOrdername,
+            '                        gOperationName, gCurrentRoute, txtComment.Text) Then
+            '    MsgBox("Register unit : " & vSerialNumber & " has been done.", MsgBoxStyle.Information, "Register done")
+            '    btnStart.Enabled = False
+            '    btnRefresh.Enabled = True
+            '    txtSn.Text = ""
+            '    txtSn.Select()
+            'Else
+            '    MsgBox("Register unit : " & vSerialNumber & " failed.", MsgBoxStyle.Critical, "Register failed")
             'End If
 
-            btnCancel.Enabled = True
-            btnStart.Enabled = False
-            txtSn.Enabled = False
-            btnPass.Enabled = True
-            btnFail.Enabled = True
 
-            CreateObject(gCurrentRouteDetailUrl)
+            'Else
+            '    '-----Not Registration--
+            '    If objSn Is Nothing Then
+            '        MsgBox(vSerialNumber & " does not exist in system or not in WIP",
+            '               MsgBoxStyle.Critical, "Not found unit serial number")
+            '        txtSn.Select(0, txtSn.TextLength)
+            '        Exit Sub
+            '    End If
+
+            '    gSerialNumber = objSn
+
+            '    Dim vWorkOrder As String = objSn("workorder")
+
+            '    If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
+            '        txtSn.Select(0, txtSn.TextLength)
+            '        Exit Sub
+            '    End If
+
+            '    '--Hook --PRE
+            '    If Not executeHook("PRE", btnStart.Name) Then
+            '        Exit Sub
+            '    End If
+            '    '------------
+
+
+
+            '    '---Check perform---
+            '    If objSn("perform_resource") <> "" Then
+            '        If objSn("perform_resource") <> gHostName Then
+            '            MsgBox(vSerialNumber & " is performing on " & objSn("perform_resource"),
+            '               MsgBoxStyle.Critical, "On performing")
+            '            txtSn.Select(0, txtSn.TextLength)
+            '            Exit Sub
+            '        End If
+            '    Else
+            '        '---Stamp Perform
+            '        setPerformSerialNumber(True, vSelectedOpr)
+            '    End If
+            '    '-------------------
+
+
+
+
+            '    'Dim vWorkOrder As String = objSn("workorder")
+            '    'If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
+            '    '    txtSn.Select(0, txtSn.TextLength)
+            '    '    Exit Sub
+            '    'End If
+
+            '    btnCancel.Enabled = True
+            '    btnStart.Enabled = False
+            '    txtSn.Enabled = False
+            '    btnPass.Enabled = True
+            '    btnFail.Enabled = True
+
+            '    CreateObject(gCurrentRouteDetailUrl)
 
         End If
 
@@ -322,34 +326,11 @@ Public Class frmParameter
             Exit Sub
         End If
 
-
-
-        'vCurrentRoutingDetailSlug = objSerialNumber.object_RoutingDetail("slug")
-
-        'CreateObject(vCurrentRoutingDetailSlug)
-
-        'btnStart.Enabled = False
-        'btnRefresh.Enabled = True
-        'txtSn.Enabled = False
-
-        'btnPass.Enabled = True
-        'btnFail.Enabled = True
-
-
-
-
-        'If Not checkSerialNumber(txtSn.Text) Then
-        '    txtSn.Select(0, txtSn.Text.Length)
-        '    txtSn.Select()
-        'Else
-        '    CreateObject(vCurrentRoutingDetailSlug)
-        '    btnStart.Enabled = False
-        '    btnRefresh.Enabled = True
-        '    txtSn.Enabled = False
-
-        '    btnPass.Enabled = True
-        '    btnFail.Enabled = True
-        'End If
+        txtSn.Enabled = False
+        btnStart.Enabled = False
+        btnCancel.Enabled = True
+        btnPass.Enabled = True
+        btnFail.Enabled = True
 
     End Sub
 
@@ -1284,6 +1265,9 @@ Exit_Function:
         btnPass.Enabled = False
         btnFail.Enabled = False
         btnCancel.Enabled = False
+
+        btnStart.Enabled = True
+        txtSn.Enabled = True
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -1641,7 +1625,7 @@ Exit_Function:
 
                 If Not objProduct("routing") Is Nothing Then
                     gCurrentRoute = objProduct("routing")("name")
-                    ' gCurrentRouteSlug = objProduct("routing")("slug")
+                    'gCurrentRouteSlug = objProduct("routing")("slug")
                     'showCurrentRouting(objProduct("routing")("name"), operation)
                     'Exit Sub
                 End If
@@ -1704,6 +1688,7 @@ Exit_Function:
                     lblnextFail.Text = objRoutingDetail("results")(0)("next_fail")
                     gCurrentRoutePosition = objRoutingDetail("results")(0)("position")
                     gCurrentRouteDetailSlug = objRoutingDetail("results")(0)("slug")
+                    gCurrentRouteDetailUrl = objRoutingDetail("results")(0)("url")
                     If gCurrentRoutePosition = "L" Then
                         lblNextPass.Text = lblNextPass.Text & " -->END Process"
                     End If
@@ -1840,6 +1825,11 @@ Exit_Function:
 
     Private Sub cbOperation_SelectedIndexChanged(sender As Object, e As EventArgs)
 
+    End Sub
+
+    Private Sub btnSnippet_Click(sender As Object, e As EventArgs) Handles btnSnippet.Click
+        frmSnippet.targetForm = Me
+        frmSnippet.Show()
     End Sub
 
 

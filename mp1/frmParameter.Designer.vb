@@ -23,6 +23,7 @@ Partial Class frmParameter
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmParameter))
         Me.btnStart = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -54,6 +55,7 @@ Partial Class frmParameter
         Me.timerExp = New System.Windows.Forms.Timer(Me.components)
         Me.btnNew = New System.Windows.Forms.Button()
         Me.lblOperation = New System.Windows.Forms.Label()
+        Me.btnSnippet = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -346,11 +348,22 @@ Partial Class frmParameter
         Me.lblOperation.TabIndex = 26
         Me.lblOperation.Text = "Operation :"
         '
+        'btnSnippet
+        '
+        Me.btnSnippet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSnippet.Location = New System.Drawing.Point(779, 3)
+        Me.btnSnippet.Name = "btnSnippet"
+        Me.btnSnippet.Size = New System.Drawing.Size(20, 22)
+        Me.btnSnippet.TabIndex = 28
+        Me.btnSnippet.Text = "S"
+        Me.btnSnippet.UseVisualStyleBackColor = True
+        '
         'frmParameter
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(799, 566)
+        Me.Controls.Add(Me.btnSnippet)
         Me.Controls.Add(Me.lblOperation)
         Me.Controls.Add(Me.btnNew)
         Me.Controls.Add(Me.lblExpToken)
@@ -377,10 +390,11 @@ Partial Class frmParameter
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnStart)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmParameter"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Tag = ""
-        Me.Text = "8MP -- Register"
+        Me.Text = "8MP -- Registration Module"
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -419,4 +433,5 @@ Partial Class frmParameter
     Friend WithEvents btnNew As Button
     Friend WithEvents tssSn As ToolStripStatusLabel
     Friend WithEvents lblOperation As Label
+    Friend WithEvents btnSnippet As Button
 End Class

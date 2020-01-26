@@ -24,6 +24,7 @@ Partial Class frmSnippet
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSnippet))
         Me.Button1 = New System.Windows.Forms.Button()
         Me.txtReturn = New System.Windows.Forms.TextBox()
         Me.lblMsg = New System.Windows.Forms.Label()
@@ -113,8 +114,9 @@ Partial Class frmSnippet
         Me.Controls.Add(Me.lblMsg)
         Me.Controls.Add(Me.txtReturn)
         Me.Controls.Add(Me.Button1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmSnippet"
-        Me.Text = "Snippet Code Testing"
+        Me.Text = "8MP -- Snippet Code Testing"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
