@@ -107,6 +107,10 @@ Public Class frmLoginForm
             'gOperationSlug = operation("slug")
             'gOperationName = operation("name")
             Select Case operation("operation_type")
+                Case "ASSEMBLY"
+                    frmAssembly.operation = vOperationId
+                    frmAssembly.ShowDialog()
+
                 Case "REGISTRATION"
                     frmParameter.operation = vOperationId
                     frmParameter.ShowDialog()

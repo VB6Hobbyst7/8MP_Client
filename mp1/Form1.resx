@@ -117,17 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="rtScriptBox.Text" xml:space="preserve">
-    <value>localObject "Button2","a"
-localObject "Button3","b"
-localObject "Button4","c"
-localObject "uctest1.textbox1","uc1"
-localObject "uctest1.textbox2","uc2"
-a.text ="Never" 
-b.text ="Give"
-c.text ="up!"
-uc1.text = "So far!" :uc1.BackColor = vbRed
-uc2.text = "Never Touch." :uc2.BackColor = vbGreen
-return "I am Here"</value>
-  </data>
 </root>

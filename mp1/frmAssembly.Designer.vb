@@ -1,5 +1,5 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class frmInspection
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+Partial Class frmAssembly
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -23,7 +23,7 @@ Partial Class frmInspection
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmInspection))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmAssembly))
         Me.btnStart = New System.Windows.Forms.Button()
         Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -52,6 +52,7 @@ Partial Class frmInspection
         Me.btnNew = New System.Windows.Forms.Button()
         Me.lblOperation = New System.Windows.Forms.Label()
         Me.btnSnippet = New System.Windows.Forms.Button()
+        Me.UcAssembly1 = New mp.ucAssembly()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -316,11 +317,28 @@ Partial Class frmInspection
         Me.btnSnippet.Text = "S"
         Me.btnSnippet.UseVisualStyleBackColor = True
         '
-        'frmInspection
+        'UcAssembly1
+        '
+        Me.UcAssembly1.absolute_url = Nothing
+        Me.UcAssembly1.access_token = Nothing
+        Me.UcAssembly1.cache_url = Nothing
+        Me.UcAssembly1.CurrentForm = Nothing
+        Me.UcAssembly1.Location = New System.Drawing.Point(82, 176)
+        Me.UcAssembly1.Name = "UcAssembly1"
+        Me.UcAssembly1.operation = Nothing
+        Me.UcAssembly1.ParentObjectName = Nothing
+        Me.UcAssembly1.product = Nothing
+        Me.UcAssembly1.routing = Nothing
+        Me.UcAssembly1.Size = New System.Drawing.Size(602, 333)
+        Me.UcAssembly1.TabIndex = 28
+        Me.UcAssembly1.url = Nothing
+        '
+        'frmAssembly
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(799, 566)
+        Me.Controls.Add(Me.UcAssembly1)
         Me.Controls.Add(Me.btnSnippet)
         Me.Controls.Add(Me.lblOperation)
         Me.Controls.Add(Me.btnNew)
@@ -345,9 +363,9 @@ Partial Class frmInspection
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.btnStart)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "frmInspection"
+        Me.Name = "frmAssembly"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "8MP -- Inspection Module"
+        Me.Text = "8MP -- Assembly Module"
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -383,4 +401,5 @@ Partial Class frmInspection
     Friend WithEvents tssSn As ToolStripStatusLabel
     Friend WithEvents lblOperation As Label
     Friend WithEvents btnSnippet As Button
+    Friend WithEvents UcAssembly1 As ucAssembly
 End Class

@@ -23,207 +23,44 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
-        Me.Button4 = New System.Windows.Forms.Button()
-        Me.UcTest1 = New mp.ucTest()
-        Me.txtReturn = New System.Windows.Forms.TextBox()
-        Me.UcMain1 = New mp.ucMain()
-        Me.Button5 = New System.Windows.Forms.Button()
-        Me.txtSnippetSlug = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.lblMsg = New System.Windows.Forms.Label()
-        Me.lblSuccess = New System.Windows.Forms.Label()
-        Me.rtScriptBox = New System.Windows.Forms.RichTextBox()
-        Me.lineTextBox = New System.Windows.Forms.Label()
-        Me.UcParaText1 = New mp.ucParaText()
+        Me.UcAssembly1 = New mp.ucAssembly()
         Me.SuspendLayout()
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(697, 234)
+        Me.Button1.Location = New System.Drawing.Point(639, 16)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(144, 33)
-        Me.Button1.TabIndex = 0
+        Me.Button1.Size = New System.Drawing.Size(107, 37)
+        Me.Button1.TabIndex = 1
         Me.Button1.Text = "Button1"
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'Button2
+        'UcAssembly1
         '
-        Me.Button2.Location = New System.Drawing.Point(12, 347)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(144, 33)
-        Me.Button2.TabIndex = 1
-        Me.Button2.Text = "Button2"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(12, 386)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(144, 33)
-        Me.Button3.TabIndex = 2
-        Me.Button3.Text = "Button3"
-        Me.Button3.UseVisualStyleBackColor = True
-        '
-        'Button4
-        '
-        Me.Button4.Location = New System.Drawing.Point(12, 425)
-        Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(144, 33)
-        Me.Button4.TabIndex = 3
-        Me.Button4.Text = "Button4"
-        Me.Button4.UseVisualStyleBackColor = True
-        '
-        'UcTest1
-        '
-        Me.UcTest1.CurrentForm = Nothing
-        Me.UcTest1.Location = New System.Drawing.Point(12, 255)
-        Me.UcTest1.Name = "UcTest1"
-        Me.UcTest1.ParentObjectName = Nothing
-        Me.UcTest1.Size = New System.Drawing.Size(280, 91)
-        Me.UcTest1.TabIndex = 4
-        '
-        'txtReturn
-        '
-        Me.txtReturn.Location = New System.Drawing.Point(397, 234)
-        Me.txtReturn.Name = "txtReturn"
-        Me.txtReturn.Size = New System.Drawing.Size(179, 20)
-        Me.txtReturn.TabIndex = 6
-        Me.txtReturn.Text = "ssdssx"
-        '
-        'UcMain1
-        '
-        Me.UcMain1.CurrentForm = Nothing
-        Me.UcMain1.Location = New System.Drawing.Point(12, 3)
-        Me.UcMain1.Name = "UcMain1"
-        Me.UcMain1.ParentObjectName = Nothing
-        Me.UcMain1.Size = New System.Drawing.Size(379, 203)
-        Me.UcMain1.TabIndex = 7
-        '
-        'Button5
-        '
-        Me.Button5.Location = New System.Drawing.Point(803, 425)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(74, 30)
-        Me.Button5.TabIndex = 8
-        Me.Button5.Text = "Get Code"
-        Me.Button5.UseVisualStyleBackColor = True
-        '
-        'txtSnippetSlug
-        '
-        Me.txtSnippetSlug.Location = New System.Drawing.Point(450, 431)
-        Me.txtSnippetSlug.Name = "txtSnippetSlug"
-        Me.txtSnippetSlug.Size = New System.Drawing.Size(347, 20)
-        Me.txtSnippetSlug.TabIndex = 9
-        Me.txtSnippetSlug.Text = "test-snippet"
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(337, 434)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(98, 13)
-        Me.Label1.TabIndex = 10
-        Me.Label1.Text = "Snippet Slug Name"
-        '
-        'lblMsg
-        '
-        Me.lblMsg.AutoSize = True
-        Me.lblMsg.Location = New System.Drawing.Point(396, 270)
-        Me.lblMsg.Name = "lblMsg"
-        Me.lblMsg.Size = New System.Drawing.Size(85, 13)
-        Me.lblMsg.TabIndex = 11
-        Me.lblMsg.Text = "Return Message"
-        '
-        'lblSuccess
-        '
-        Me.lblSuccess.AutoSize = True
-        Me.lblSuccess.Location = New System.Drawing.Point(396, 257)
-        Me.lblSuccess.Name = "lblSuccess"
-        Me.lblSuccess.Size = New System.Drawing.Size(48, 13)
-        Me.lblSuccess.TabIndex = 12
-        Me.lblSuccess.Text = "Success"
-        '
-        'rtScriptBox
-        '
-        Me.rtScriptBox.Font = New System.Drawing.Font("Courier New", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.rtScriptBox.Location = New System.Drawing.Point(427, 3)
-        Me.rtScriptBox.Name = "rtScriptBox"
-        Me.rtScriptBox.Size = New System.Drawing.Size(450, 225)
-        Me.rtScriptBox.TabIndex = 13
-        Me.rtScriptBox.Text = resources.GetString("rtScriptBox.Text")
-        '
-        'lineTextBox
-        '
-        Me.lineTextBox.AutoSize = True
-        Me.lineTextBox.Location = New System.Drawing.Point(395, 7)
-        Me.lineTextBox.Name = "lineTextBox"
-        Me.lineTextBox.Size = New System.Drawing.Size(13, 13)
-        Me.lineTextBox.TabIndex = 14
-        Me.lineTextBox.Text = "1"
-        '
-        'UcParaText1
-        '
-        Me.UcParaText1.access_token = Nothing
-        Me.UcParaText1.AutoSize = True
-        Me.UcParaText1.BackColor = System.Drawing.SystemColors.Control
-        Me.UcParaText1.CurrentForm = Nothing
-        Me.UcParaText1.Location = New System.Drawing.Point(399, 319)
-        Me.UcParaText1.message = Nothing
-        Me.UcParaText1.Name = "UcParaText1"
-        Me.UcParaText1.ParentObjectName = Nothing
-        Me.UcParaText1.regExpress = Nothing
-        Me.UcParaText1.required = False
-        Me.UcParaText1.Size = New System.Drawing.Size(363, 26)
-        Me.UcParaText1.slug = Nothing
-        Me.UcParaText1.TabIndex = 15
-        Me.UcParaText1.title = "Test Text"
-        Me.UcParaText1.url = Nothing
-        Me.UcParaText1.value = "ddd"
+        Me.UcAssembly1.absolute_url = Nothing
+        Me.UcAssembly1.access_token = Nothing
+        Me.UcAssembly1.cache_url = Nothing
+        Me.UcAssembly1.CurrentForm = Nothing
+        Me.UcAssembly1.Location = New System.Drawing.Point(10, 12)
+        Me.UcAssembly1.Name = "UcAssembly1"
+        Me.UcAssembly1.ParentObjectName = Nothing
+        Me.UcAssembly1.Size = New System.Drawing.Size(604, 332)
+        Me.UcAssembly1.TabIndex = 2
+        Me.UcAssembly1.url = Nothing
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(889, 467)
-        Me.Controls.Add(Me.UcParaText1)
-        Me.Controls.Add(Me.lineTextBox)
-        Me.Controls.Add(Me.rtScriptBox)
-        Me.Controls.Add(Me.lblSuccess)
-        Me.Controls.Add(Me.lblMsg)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.txtSnippetSlug)
-        Me.Controls.Add(Me.Button5)
-        Me.Controls.Add(Me.UcMain1)
-        Me.Controls.Add(Me.txtReturn)
-        Me.Controls.Add(Me.UcTest1)
-        Me.Controls.Add(Me.Button4)
-        Me.Controls.Add(Me.Button3)
-        Me.Controls.Add(Me.Button2)
+        Me.Controls.Add(Me.UcAssembly1)
         Me.Controls.Add(Me.Button1)
         Me.Name = "Form1"
         Me.Text = "I am Back"
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
-
     Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
-    Friend WithEvents Button3 As Button
-    Friend WithEvents Button4 As Button
-    Friend WithEvents UcTest1 As ucTest
-    Friend WithEvents txtReturn As TextBox
-    Friend WithEvents UcMain1 As ucMain
-    Friend WithEvents Button5 As Button
-    Friend WithEvents txtSnippetSlug As TextBox
-    Friend WithEvents Label1 As Label
-    Friend WithEvents lblMsg As Label
-    Friend WithEvents lblSuccess As Label
-    Friend WithEvents rtScriptBox As RichTextBox
-    Friend WithEvents lineTextBox As Label
-    Friend WithEvents UcParaText1 As ucParaText
+    Friend WithEvents UcAssembly1 As ucAssembly
 End Class
