@@ -219,43 +219,7 @@ Public Class frmAssembly
         'gOperationType
         Dim vSelectedOpr As String = gOperationName  'cbOperation.SelectedValue
         Dim vSelectedWorkOrder As String = gWorkOrderSlug  ' cbWorkOrder.SelectedValue
-        If gOperationType = "REGISTRATION" Then
-            If Not objSn Is Nothing Then
-                MsgBox(vSerialNumber & " still in process", MsgBoxStyle.Critical, "Unable to register")
-                Exit Sub
-            End If
-
-            '--Check WorkOrder QTY---
-            Dim objWorkOrder As Object
-            objWorkOrder = objApiService.getObjectBySlug("workorder", vSelectedWorkOrder)
-            If objWorkOrder("registered") >= objWorkOrder("qty") Then
-                MsgBox("Over WorkOrder QTY " & vbCrLf &
-                       "Only " & objWorkOrder("qty") & " units for this work order",
-                       MsgBoxStyle.Critical, "Unable to register")
-                txtSn.Select()
-                Exit Sub
-            End If
-
-            '--Hook --PRE
-            If Not executeHook("PRE", btnStart.Name) Then
-                txtSn.Select()
-                Exit Sub
-            End If
-            '------------
-
-
-
-            If registerSerialNUmber(vSerialNumber, gWorkOrdername,
-                                    gOperationName, gCurrentRoute, txtComment.Text) Then
-                MsgBox("Register unit : " & vSerialNumber & " has been done.", MsgBoxStyle.Information, "Register done")
-                btnStart.Enabled = False
-                btnRefresh.Enabled = True
-                txtSn.Text = ""
-                txtSn.Select()
-            Else
-                MsgBox("Register unit : " & vSerialNumber & " failed.", MsgBoxStyle.Critical, "Register failed")
-            End If
-        Else
+        If gOperationType <> "REGISTRATION" Then
             '-----Not Registration--
             If objSn Is Nothing Then
                 MsgBox(vSerialNumber & " does not exist in system or not in WIP",
@@ -295,22 +259,20 @@ Public Class frmAssembly
             End If
             '-------------------
 
-
-
-
-            'Dim vWorkOrder As String = objSn("workorder")
-            'If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
-            '    txtSn.Select(0, txtSn.TextLength)
-            '    Exit Sub
-            'End If
-
             btnCancel.Enabled = True
             btnStart.Enabled = False
             txtSn.Enabled = False
             btnPass.Enabled = True
             btnFail.Enabled = True
 
-            CreateObject(gCurrentRouteDetailUrl)
+            'Parameter
+            'CreateObject(gCurrentRouteDetailUrl)
+            With UcAssembly
+                .url = vUrl
+                .cache_url = vCacheUrl
+                .access_token = access_token
+                .routing = gCurrentRouteDetailUrl
+            End With
 
         End If
 
@@ -1610,8 +1572,8 @@ Exit_Function:
         For Each nControl In Me.Controls
             strTooltrip = nControl.Name
             toolTip1.SetToolTip(nControl, strTooltrip)
-
         Next
+        UcAssembly.showOpject()
     End Sub
 
 

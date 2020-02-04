@@ -9,24 +9,29 @@ Public Class ucAssembly
     '----------------Start Standard Property------------------
 
     Dim objApiService As New clsAPIService
+    Dim objCurrentAssembly As Object
 
-    Private routingName As String
+    'RegEx for all Item
+    Dim strDateCodeRegEx As String = String.Empty
+    Dim strLotCodeRegEx As String = String.Empty
+    Dim strSupplyCodeRegEx As String = String.Empty
+    Dim strSerialNumberRegEx As String = String.Empty
+
+    Private routingDetailSlug As String 'Rotuing Detail URL
     Public Property routing() As String
         Get
-            Return routingName
+            Return routingDetailSlug
         End Get
         Set(ByVal value As String)
-            routingName = value
-        End Set
-    End Property
-
-    Private operationName As String
-    Public Property operation() As String
-        Get
-            Return operationName
-        End Get
-        Set(ByVal value As String)
-            operationName = value
+            routingDetailSlug = value
+            '---Get Routing URL---
+            If routingDetailSlug = "" Then
+                Exit Property
+            End If
+            Dim objRoutingDetail As Object
+            objRoutingDetail = objApiService.getObjectByUrl(value)
+            showAssemblyProfile(objRoutingDetail("assembly_usages"))
+            '---------------------
         End Set
     End Property
 
@@ -79,12 +84,38 @@ Public Class ucAssembly
             Return vAccessToken
         End Get
         Set(ByVal Value As String)
-            Me.vAccessToken = Value
+
             objApiService.access_token = Value
         End Set
     End Property
     '-------------End Standard Property--------------
 
+
+    Sub showAssemblyProfile(objAssemblyUsage As Object)
+        If objAssemblyUsage.length > 0 Then
+            'first level "assembly"
+            Dim comboSource As New Dictionary(Of String, String)()
+            comboSource.Add("", "---")
+            For Each assembly In objAssemblyUsage
+                comboSource.Add(assembly("assembly")("name") & ":" &
+                        assembly("assembly")("title"), assembly("assembly")("url"))
+
+            Next
+            With cbAssemblyProfile
+                .DropDownStyle = ComboBoxStyle.DropDownList
+                .DataSource = New BindingSource(comboSource, Nothing)
+                .DisplayMember = "Key"
+                .ValueMember = "Value"
+                '.SelectedValue = vDefaultValue
+                '.Items.Insert(0, String.Empty)
+            End With
+
+
+
+
+        End If
+
+    End Sub
 
 
     Public Shared Function getJsonString(ByVal address As String) As String
@@ -102,15 +133,16 @@ Public Class ucAssembly
         Return data
     End Function
 
-    Private Function getItemBySlug(vItemSlug As String) As Object
-        Dim json As Object
-        json = getJsonObject(vUrl + "/api/item/" + vItemSlug)
-        getItemBySlug = json
-    End Function
 
     Private Function getSnippetBySlug(vSnippetSlug As String) As Object
         Dim json As Object
         json = getJsonObject(vUrl + "/api/snippet/" + vSnippetSlug)
+        Return json
+    End Function
+
+    Private Function getSnippetByUrl(url As String) As Object
+        Dim json As Object
+        json = getJsonObject(url)
         Return json
     End Function
 
@@ -144,20 +176,123 @@ Public Class ucAssembly
         Return True
     End Function
 
-    Private Function getCode(vSlug_ As String) As String
-        'Dim iObject As Object
-        'iObject = getItemBySlug(vSlug_)
-        Dim iObject As Object
-        iObject = objApiService.getObjectBySlug("item", vSlug_)
+    'Private Function getCode(vSlug_ As String) As String
+    '    'Dim iObject As Object
+    '    'iObject = getItemBySlug(vSlug_)
+    '    Dim iObject As Object
+    '    iObject = objApiService.getObjectBySlug("item", vSlug_)
 
-        If iObject("snippet") Is Nothing Then
-            getCode = ""
-        Else
-            ' getCode = getSnippetBySlug(iObject("snippet"))("code")
-            getCode = objApiService.getObjectByUrl(iObject("snippet")("url"))("code")
+    '    If iObject("snippet") Is Nothing Then
+    '        getCode = ""
+    '    Else
+    '        ' getCode = getSnippetBySlug(iObject("snippet"))("code")
+    '        getCode = objApiService.getObjectByUrl(iObject("snippet")("url"))("code")
+    '    End If
+
+    'End Function
+
+    Private Sub cbAssemblyProfile_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cbAssemblyProfile.SelectionChangeCommitted
+        Dim key As String = DirectCast(cbAssemblyProfile.SelectedItem, KeyValuePair(Of String, String)).Key
+        Dim AssemblySlug As String = DirectCast(cbAssemblyProfile.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
+
+        If key <> "" Then
+            objCurrentAssembly = objApiService.getObjectByUrl(AssemblySlug & "items/")
+            dgProfile.Rows.Clear()
+            For Each part In objCurrentAssembly
+                With dgProfile
+                    Dim n As Integer = .Rows.Add()
+                    .Rows.Item(n).Cells(0).Value = part("part")("rd")
+                    .Rows.Item(n).Cells(1).Value = part("part")("pn")
+                    .Rows.Item(n).Cells(2).Value = part("part")("pn_type")
+                    .Rows.Item(n).Cells(3).Value = part("part")("title")
+                End With
+            Next
         End If
+    End Sub
 
-    End Function
+
+    Private Sub dgProfile_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgProfile.CellContentClick
+
+    End Sub
+
+    Private Sub dgProfile_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgProfile.CellClick
+        ' Get the current cell location.
+        Dim y As Integer = dgProfile.CurrentCellAddress.Y
+        Dim x As Integer = dgProfile.CurrentCellAddress.X
+
+        ' Write coordinates to console.
+        lblRD.Text = dgProfile.Rows(y).Cells(x).Value
+        'find RD in objCurrentAssembly , to get all item's RegEx
+        setItemRegEx(lblRD.Text)
+    End Sub
+
+    Sub setItemRegEx(rd As String)
+        strDateCodeRegEx = ""
+        strLotCodeRegEx = ""
+        strSupplyCodeRegEx = ""
+        strSerialNumberRegEx = ""
+        For Each part In objCurrentAssembly
+            If part("part")("rd") = rd Then
+                If part("part")("pn_type") = "COMPONENT" Then
+                    txtPartSerial.Enabled = False
+                    lblSerialnumber.Enabled = False
+                Else
+                    txtPartSerial.Enabled = True
+                    lblSerialnumber.Enabled = True
+                End If
+
+                '---Clear all text
+                txtDatecode.Text = ""
+                txtLotcode.Text = ""
+                txtSupplycode.Text = ""
+                txtPartSerial.Text = ""
+                '--set RegEx on all Item
+                strDateCodeRegEx = IIf(part("datecode_regexp") Is Nothing, "\w*", part("datecode_regexp"))
+                strLotCodeRegEx = IIf(part("lotcode_regexp") Is Nothing, "\w*", part("lotcode_regexp"))
+                strSupplyCodeRegEx = IIf(part("supplycode_regexp") Is Nothing, "\w*", part("supplycode_regexp"))
+                strSerialNumberRegEx = IIf(part("sn_regexp") Is Nothing, "\w*", part("sn_regexp"))
+                '-----------------------
+                txtDatecode.Select()
+                Exit For
+            End If
+        Next
+    End Sub
+
+    Private Sub txtDatecode_TextChanged(sender As Object, e As EventArgs) Handles txtDatecode.TextChanged
+        Dim reg_exp As New Regex("^" & strDateCodeRegEx & "$")
+        If reg_exp.IsMatch(txtDatecode.Text) Then
+            txtDatecode.BackColor = Color.White
+        Else
+            txtDatecode.BackColor = Color.Yellow
+        End If
+    End Sub
+
+    Private Sub txtLotcode_TextChanged(sender As Object, e As EventArgs) Handles txtLotcode.TextChanged
+        Dim reg_exp As New Regex("^" & strLotCodeRegEx & "$")
+        If reg_exp.IsMatch(txtLotcode.Text) Then
+            txtLotcode.BackColor = Color.White
+        Else
+            txtLotcode.BackColor = Color.Yellow
+        End If
+    End Sub
+
+    Private Sub txtSupplycode_TextChanged(sender As Object, e As EventArgs) Handles txtSupplycode.TextChanged
+        Dim reg_exp As New Regex("^" & strSupplyCodeRegEx & "$")
+        If reg_exp.IsMatch(txtSupplycode.Text) Then
+            txtSupplycode.BackColor = Color.White
+        Else
+            txtSupplycode.BackColor = Color.Yellow
+        End If
+    End Sub
+
+    Private Sub txtPartSerial_TextChanged(sender As Object, e As EventArgs) Handles txtPartSerial.TextChanged
+        Dim reg_exp As New Regex("^" & strSerialNumberRegEx & "$")
+        If reg_exp.IsMatch(txtPartSerial.Text) Then
+            txtPartSerial.BackColor = Color.White
+        Else
+            txtPartSerial.BackColor = Color.Yellow
+        End If
+    End Sub
 
 
     '--------Mandatory Funtion for all User Controls-------------
@@ -295,6 +430,12 @@ HasError:
         showObjectName()
 
     End Sub
+
+
+
+
+
+
 
     '--------End Mandatory Funtion for all User Controls-------------
 
