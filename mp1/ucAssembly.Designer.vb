@@ -45,6 +45,9 @@ Partial Class ucAssembly
         Me.btnReset = New System.Windows.Forms.Button()
         Me.lblRefDes = New System.Windows.Forms.Label()
         Me.lblRD = New System.Windows.Forms.Label()
+        Me.txtPartId = New System.Windows.Forms.TextBox()
+        Me.lblPartId = New System.Windows.Forms.Label()
+        Me.chkMsd = New System.Windows.Forms.CheckBox()
         CType(Me.dgProfile, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -120,7 +123,7 @@ Partial Class ucAssembly
         '
         Me.lblDatecode.AutoSize = True
         Me.lblDatecode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.lblDatecode.Location = New System.Drawing.Point(489, 82)
+        Me.lblDatecode.Location = New System.Drawing.Point(489, 172)
         Me.lblDatecode.Name = "lblDatecode"
         Me.lblDatecode.Size = New System.Drawing.Size(79, 20)
         Me.lblDatecode.TabIndex = 5
@@ -130,25 +133,25 @@ Partial Class ucAssembly
         '
         Me.txtDatecode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtDatecode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.txtDatecode.Location = New System.Drawing.Point(599, 79)
+        Me.txtDatecode.Location = New System.Drawing.Point(599, 169)
         Me.txtDatecode.Name = "txtDatecode"
         Me.txtDatecode.Size = New System.Drawing.Size(195, 26)
-        Me.txtDatecode.TabIndex = 6
+        Me.txtDatecode.TabIndex = 8
         '
         'txtLotcode
         '
         Me.txtLotcode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLotcode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.txtLotcode.Location = New System.Drawing.Point(599, 108)
+        Me.txtLotcode.Location = New System.Drawing.Point(599, 198)
         Me.txtLotcode.Name = "txtLotcode"
         Me.txtLotcode.Size = New System.Drawing.Size(195, 26)
-        Me.txtLotcode.TabIndex = 8
+        Me.txtLotcode.TabIndex = 9
         '
         'lblLotcode
         '
         Me.lblLotcode.AutoSize = True
         Me.lblLotcode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.lblLotcode.Location = New System.Drawing.Point(489, 114)
+        Me.lblLotcode.Location = New System.Drawing.Point(489, 204)
         Me.lblLotcode.Name = "lblLotcode"
         Me.lblLotcode.Size = New System.Drawing.Size(67, 20)
         Me.lblLotcode.TabIndex = 7
@@ -158,7 +161,7 @@ Partial Class ucAssembly
         '
         Me.txtSupplycode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtSupplycode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.txtSupplycode.Location = New System.Drawing.Point(599, 138)
+        Me.txtSupplycode.Location = New System.Drawing.Point(599, 228)
         Me.txtSupplycode.Name = "txtSupplycode"
         Me.txtSupplycode.Size = New System.Drawing.Size(195, 26)
         Me.txtSupplycode.TabIndex = 10
@@ -167,7 +170,7 @@ Partial Class ucAssembly
         '
         Me.lblSupplycode.AutoSize = True
         Me.lblSupplycode.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.lblSupplycode.Location = New System.Drawing.Point(489, 144)
+        Me.lblSupplycode.Location = New System.Drawing.Point(489, 234)
         Me.lblSupplycode.Name = "lblSupplycode"
         Me.lblSupplycode.Size = New System.Drawing.Size(96, 20)
         Me.lblSupplycode.TabIndex = 9
@@ -177,16 +180,16 @@ Partial Class ucAssembly
         '
         Me.txtPartSerial.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtPartSerial.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.txtPartSerial.Location = New System.Drawing.Point(599, 167)
+        Me.txtPartSerial.Location = New System.Drawing.Point(599, 136)
         Me.txtPartSerial.Name = "txtPartSerial"
         Me.txtPartSerial.Size = New System.Drawing.Size(195, 26)
-        Me.txtPartSerial.TabIndex = 12
+        Me.txtPartSerial.TabIndex = 7
         '
         'lblSerialnumber
         '
         Me.lblSerialnumber.AutoSize = True
         Me.lblSerialnumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.lblSerialnumber.Location = New System.Drawing.Point(489, 173)
+        Me.lblSerialnumber.Location = New System.Drawing.Point(489, 142)
         Me.lblSerialnumber.Name = "lblSerialnumber"
         Me.lblSerialnumber.Size = New System.Drawing.Size(107, 20)
         Me.lblSerialnumber.TabIndex = 11
@@ -196,17 +199,17 @@ Partial Class ucAssembly
         '
         Me.txtNote.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtNote.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.txtNote.Location = New System.Drawing.Point(599, 197)
+        Me.txtNote.Location = New System.Drawing.Point(599, 258)
         Me.txtNote.Multiline = True
         Me.txtNote.Name = "txtNote"
         Me.txtNote.Size = New System.Drawing.Size(195, 60)
-        Me.txtNote.TabIndex = 14
+        Me.txtNote.TabIndex = 11
         '
         'lblNote
         '
         Me.lblNote.AutoSize = True
         Me.lblNote.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
-        Me.lblNote.Location = New System.Drawing.Point(489, 200)
+        Me.lblNote.Location = New System.Drawing.Point(489, 261)
         Me.lblNote.Name = "lblNote"
         Me.lblNote.Size = New System.Drawing.Size(43, 20)
         Me.lblNote.TabIndex = 13
@@ -216,10 +219,10 @@ Partial Class ucAssembly
         '
         Me.btnAssembly.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnAssembly.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.btnAssembly.Location = New System.Drawing.Point(599, 263)
+        Me.btnAssembly.Location = New System.Drawing.Point(599, 324)
         Me.btnAssembly.Name = "btnAssembly"
         Me.btnAssembly.Size = New System.Drawing.Size(96, 26)
-        Me.btnAssembly.TabIndex = 15
+        Me.btnAssembly.TabIndex = 12
         Me.btnAssembly.Text = "Assembly"
         Me.btnAssembly.UseVisualStyleBackColor = True
         '
@@ -227,10 +230,10 @@ Partial Class ucAssembly
         '
         Me.btnReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnReset.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.btnReset.Location = New System.Drawing.Point(701, 263)
+        Me.btnReset.Location = New System.Drawing.Point(701, 324)
         Me.btnReset.Name = "btnReset"
         Me.btnReset.Size = New System.Drawing.Size(93, 26)
-        Me.btnReset.TabIndex = 16
+        Me.btnReset.TabIndex = 13
         Me.btnReset.Text = "Reset"
         Me.btnReset.UseVisualStyleBackColor = True
         '
@@ -254,10 +257,43 @@ Partial Class ucAssembly
         Me.lblRD.TabIndex = 18
         Me.lblRD.Text = "..."
         '
+        'txtPartId
+        '
+        Me.txtPartId.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtPartId.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
+        Me.txtPartId.Location = New System.Drawing.Point(599, 108)
+        Me.txtPartId.Name = "txtPartId"
+        Me.txtPartId.Size = New System.Drawing.Size(195, 26)
+        Me.txtPartId.TabIndex = 6
+        '
+        'lblPartId
+        '
+        Me.lblPartId.AutoSize = True
+        Me.lblPartId.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!)
+        Me.lblPartId.Location = New System.Drawing.Point(489, 111)
+        Me.lblPartId.Name = "lblPartId"
+        Me.lblPartId.Size = New System.Drawing.Size(59, 20)
+        Me.lblPartId.TabIndex = 20
+        Me.lblPartId.Text = "Part ID"
+        '
+        'chkMsd
+        '
+        Me.chkMsd.AutoSize = True
+        Me.chkMsd.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkMsd.Location = New System.Drawing.Point(599, 78)
+        Me.chkMsd.Name = "chkMsd"
+        Me.chkMsd.Size = New System.Drawing.Size(119, 24)
+        Me.chkMsd.TabIndex = 21
+        Me.chkMsd.Text = "MSD Control"
+        Me.chkMsd.UseVisualStyleBackColor = True
+        '
         'ucAssembly
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.chkMsd)
+        Me.Controls.Add(Me.lblPartId)
+        Me.Controls.Add(Me.txtPartId)
         Me.Controls.Add(Me.lblRD)
         Me.Controls.Add(Me.lblRefDes)
         Me.Controls.Add(Me.btnReset)
@@ -308,4 +344,7 @@ Partial Class ucAssembly
     Friend WithEvents btnReset As Button
     Friend WithEvents lblRefDes As Label
     Friend WithEvents lblRD As Label
+    Friend WithEvents txtPartId As TextBox
+    Friend WithEvents lblPartId As Label
+    Friend WithEvents chkMsd As CheckBox
 End Class

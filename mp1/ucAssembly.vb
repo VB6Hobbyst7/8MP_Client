@@ -18,6 +18,18 @@ Public Class ucAssembly
     Dim strSerialNumberRegEx As String = String.Empty
 
     Private routingDetailSlug As String 'Rotuing Detail URL
+
+    'Public Sub New(url As String, token As String)
+
+    '    ' This call is required by the designer.
+    '    InitializeComponent()
+
+    '    ' Add any initialization after the InitializeComponent() call.
+    '    vAccessToken = token
+    '    vUrl = url
+
+    'End Sub
+
     Public Property routing() As String
         Get
             Return routingDetailSlug
@@ -64,7 +76,7 @@ Public Class ucAssembly
         End Get
         Set(ByVal value As String)
             vCacheUrl = value
-            'objApiService.Url = value
+            'objApiService = value
         End Set
     End Property
 
@@ -88,8 +100,164 @@ Public Class ucAssembly
             objApiService.access_token = Value
         End Set
     End Property
+
+    Private vSerialNumber As String
+    Public Property serialnumber() As String
+        Get
+            Return vSerialNumber
+        End Get
+        Set(ByVal value As String)
+            vSerialNumber = value
+        End Set
+    End Property
     '-------------End Standard Property--------------
 
+
+
+    '--------Mandatory Funtion for all User Controls-------------
+    '--------DO NOT change---------------------------------------
+    Dim toolTip1 As New ToolTip()
+    Dim vParentObjectName As String
+    Private vCurrentFormIn As Form
+
+    Public Property ParentObjectName() As String
+        Get
+            ParentObjectName = vParentObjectName
+        End Get
+        Set(vValue As String)
+            vParentObjectName = vValue
+        End Set
+    End Property
+
+    Public Property getLocalObjectValue(ByVal vObjectName As String) As String
+        Get
+            Dim vStep() As String
+            vStep = Split(vObjectName, ".")
+            If UBound(vStep) > 0 Then
+                Dim nControl As Control
+                nControl = Controls(vStep(0))
+                'getLocalObjectValue = nControl.getLocalObjectValue(vStep(1)).text
+                getLocalObjectValue = CallByName(nControl, "", Microsoft.VisualBasic.CallType.Get, vStep(1))
+            Else
+                getLocalObjectValue = Controls(vObjectName).Text
+            End If
+        End Get
+        Set(value As String)
+
+        End Set
+    End Property
+
+    Public Property localControls(vObjName As String) As Object
+        Get
+            localControls = Me.Controls(vObjName)
+        End Get
+        Set(value As Object)
+
+        End Set
+    End Property
+
+    Public Property CurrentForm() As Form
+        Get
+            CurrentForm = vCurrentFormIn
+        End Get
+        Set(vCurrForm As Form)
+            vCurrentFormIn = vCurrForm
+        End Set
+    End Property
+    '    Public Property Get localControls(vObjName As String) As Object
+    '        Set localControls = UserControl.Controls(vObjName)
+    'End Property
+
+    '    Public Property Let CurrentForm(ByVal vCurrForm As Form)
+    '        Set vCurrentFormIn = vCurrForm
+    'End Property
+
+    '    Public Function initODCSEscript()
+    '        objOdcsys.setCustomForm = vCurrentFormIn
+    '        objOdcsys.setAllowUI = True
+    '        objOdcsys.setOnCustomControl
+    '    End Function
+
+    Private Sub showObjectName()
+        Dim nControl As Control
+        'Comment by Chutchai S on March 2,2009
+        'To fix program Crash , because below this command.
+        '    For Each nControl In UserControl.Controls
+        '        If Not TypeOf UserControl.ParentControls.Item(0) Is Form Then
+        '            nControl.ToolTipText = UserControl.ParentControls.Item(0).Name & "." & Extender.Name & "." & nControl.Name
+        '        Else
+        '            nControl.ToolTipText = Extender.Name & "." & nControl.Name
+        '        End If
+        '    Next
+
+        'Added by Chutchai S on March 2,2009
+        Dim strTooltrip As String
+        For Each nControl In Me.Controls
+            'nControl.ToolTipText = Extender.Name & "." & nControl.Name
+
+            'If vParentObjectName = "" Then
+            '    strTooltrip = Me.Name & "." & nControl.Name
+            'Else
+            '    strTooltrip = vParentObjectName & "." & Me.Name & "." & nControl.Name
+            'End If
+
+            Dim vParentName As String
+
+            If TypeOf Me.Parent Is Form Then
+                strTooltrip = Me.Name & "." & nControl.Name
+            Else
+
+                vParentName = Me.Parent.Name
+                strTooltrip = vParentName & "." & Me.Name & "." & nControl.Name
+            End If
+            toolTip1.SetToolTip(nControl, strTooltrip)
+
+        Next
+
+    End Sub
+    Private Function getExtenderName(vObjName As String) As String
+        'Added by Tuk on July 4,2008
+        'To protect "send error to MS" box
+        'Still not sure.
+
+        On Error GoTo HasError
+
+        'Comment by Chutchai S on March 2,2009
+        'To fix program Crash , because below this command.
+        '    If Not TypeOf UserControl.ParentControls.Item(0) Is Form Then
+        '        getExtenderName = UserControl.ParentControls.Item(0).Name & "." & Extender.Name & "." & vObjName
+        '    Else
+        '        getExtenderName = Extender.Name & "." & vObjName
+        '    End If
+
+
+        'Added by Chutchai S on March 2,2009
+        If vParentObjectName = "" Then
+            getExtenderName = Me.Name & "." & vObjName
+        Else
+            getExtenderName = vParentObjectName & "." & Me.Name & "." & vObjName
+        End If
+
+HasError:
+    End Function
+
+    'Private Sub btnShow_Click(sender As Object, e As EventArgs) Handles btnShow.Click
+    '    showObjectName()
+    'End Sub
+
+    Public Sub showOpject()
+        showObjectName()
+
+    End Sub
+
+
+    '--------End Mandatory Funtion for all User Controls-------------
+
+    Public Sub clear()
+        cbAssemblyProfile.DataSource = Nothing
+        dgProfile.Rows.Clear()
+
+    End Sub
 
     Sub showAssemblyProfile(objAssemblyUsage As Object)
         If objAssemblyUsage.length > 0 Then
@@ -234,14 +402,21 @@ Public Class ucAssembly
         For Each part In objCurrentAssembly
             If part("part")("rd") = rd Then
                 If part("part")("pn_type") = "COMPONENT" Then
+                    txtPartId.Enabled = True
+                    lblPartId.Enabled = True
                     txtPartSerial.Enabled = False
                     lblSerialnumber.Enabled = False
+                    txtPartId.Select()
                 Else
+                    txtPartId.Enabled = False
+                    lblPartId.Enabled = False
                     txtPartSerial.Enabled = True
                     lblSerialnumber.Enabled = True
+                    txtPartSerial.Select()
                 End If
 
                 '---Clear all text
+                txtPartId.Text = ""
                 txtDatecode.Text = ""
                 txtLotcode.Text = ""
                 txtSupplycode.Text = ""
@@ -252,7 +427,9 @@ Public Class ucAssembly
                 strSupplyCodeRegEx = IIf(part("supplycode_regexp") Is Nothing, "\w*", part("supplycode_regexp"))
                 strSerialNumberRegEx = IIf(part("sn_regexp") Is Nothing, "\w*", part("sn_regexp"))
                 '-----------------------
-                txtDatecode.Select()
+                'msd_control
+                chkMsd.Checked = part("msd_control") 'IIf(part("sn_regexp"), True, False)
+
                 Exit For
             End If
         Next
@@ -294,149 +471,74 @@ Public Class ucAssembly
         End If
     End Sub
 
-
-    '--------Mandatory Funtion for all User Controls-------------
-    '--------DO NOT change---------------------------------------
-    Dim toolTip1 As New ToolTip()
-    Dim vParentObjectName As String
-    Private vCurrentFormIn As Form
-
-    Public Property ParentObjectName() As String
-        Get
-            ParentObjectName = vParentObjectName
-        End Get
-        Set(vValue As String)
-            vParentObjectName = vValue
-        End Set
-    End Property
-
-    Public Property getLocalObjectValue(ByVal vObjectName As String) As String
-        Get
-            Dim vStep() As String
-            vStep = Split(vObjectName, ".")
-            If UBound(vStep) > 0 Then
-                Dim nControl As Control
-                nControl = Controls(vStep(0))
-                'getLocalObjectValue = nControl.getLocalObjectValue(vStep(1)).text
-                getLocalObjectValue = CallByName(nControl, "", Microsoft.VisualBasic.CallType.Get, vStep(1))
-            Else
-                getLocalObjectValue = Controls(vObjectName).Text
-            End If
-        End Get
-        Set(value As String)
-
-        End Set
-    End Property
-
-    Public Property localControls(vObjName As String) As Object
-        Get
-            localControls = Me.Controls(vObjName)
-        End Get
-        Set(value As Object)
-
-        End Set
-    End Property
-
-    Public Property CurrentForm() As Form
-        Get
-            CurrentForm = vCurrentFormIn
-        End Get
-        Set(vCurrForm As Form)
-            vCurrentFormIn = vCurrForm
-        End Set
-    End Property
-    '    Public Property Get localControls(vObjName As String) As Object
-    '        Set localControls = UserControl.Controls(vObjName)
-    'End Property
-
-    '    Public Property Let CurrentForm(ByVal vCurrForm As Form)
-    '        Set vCurrentFormIn = vCurrForm
-    'End Property
-
-    '    Public Function initODCSEscript()
-    '        objOdcsys.setCustomForm = vCurrentFormIn
-    '        objOdcsys.setAllowUI = True
-    '        objOdcsys.setOnCustomControl
-    '    End Function
-
-    Private Sub showObjectName()
-        Dim nControl As Control
-        'Comment by Chutchai S on March 2,2009
-        'To fix program Crash , because below this command.
-        '    For Each nControl In UserControl.Controls
-        '        If Not TypeOf UserControl.ParentControls.Item(0) Is Form Then
-        '            nControl.ToolTipText = UserControl.ParentControls.Item(0).Name & "." & Extender.Name & "." & nControl.Name
-        '        Else
-        '            nControl.ToolTipText = Extender.Name & "." & nControl.Name
-        '        End If
-        '    Next
-
-        'Added by Chutchai S on March 2,2009
-        Dim strTooltrip As String
-        For Each nControl In Me.Controls
-            'nControl.ToolTipText = Extender.Name & "." & nControl.Name
-
-            'If vParentObjectName = "" Then
-            '    strTooltrip = Me.Name & "." & nControl.Name
-            'Else
-            '    strTooltrip = vParentObjectName & "." & Me.Name & "." & nControl.Name
-            'End If
-
-            Dim vParentName As String
-
-            If TypeOf Me.Parent Is Form Then
-                strTooltrip = Me.Name & "." & nControl.Name
-            Else
-
-                vParentName = Me.Parent.Name
-                strTooltrip = vParentName & "." & Me.Name & "." & nControl.Name
-            End If
-            toolTip1.SetToolTip(nControl, strTooltrip)
-
-        Next
+    Private Sub txtPartId_TextChanged(sender As Object, e As EventArgs) Handles txtPartId.TextChanged
 
     End Sub
-    Private Function getExtenderName(vObjName As String) As String
-        'Added by Tuk on July 4,2008
-        'To protect "send error to MS" box
-        'Still not sure.
 
-        On Error GoTo HasError
+    Private Sub txtPartId_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPartId.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            'get Component 
+            txtDatecode.Text = ""
+            txtLotcode.Text = ""
+            txtSupplycode.Text = ""
 
-        'Comment by Chutchai S on March 2,2009
-        'To fix program Crash , because below this command.
-        '    If Not TypeOf UserControl.ParentControls.Item(0) Is Form Then
-        '        getExtenderName = UserControl.ParentControls.Item(0).Name & "." & Extender.Name & "." & vObjName
-        '    Else
-        '        getExtenderName = Extender.Name & "." & vObjName
-        '    End If
+            Dim objComponent As New Object
+            objComponent = objApiService.getObjectByUrl(vUrl & "/api/component/" & txtPartId.Text.ToUpper & "/")
 
-
-        'Added by Chutchai S on March 2,2009
-        If vParentObjectName = "" Then
-            getExtenderName = Me.Name & "." & vObjName
-        Else
-            getExtenderName = vParentObjectName & "." & Me.Name & "." & vObjName
+            If Not objComponent Is Nothing Then
+                txtDatecode.Text = objComponent("datecode")
+                txtLotcode.Text = objComponent("lotcode")
+                txtSupplycode.Text = objComponent("supcode")
+            Else
+                MsgBox("Component : " & txtPartId.Text.ToUpper & " doesn't exist in system",
+                       MsgBoxStyle.Critical, "Component not found")
+            End If
         End If
-
-HasError:
-    End Function
-
-    'Private Sub btnShow_Click(sender As Object, e As EventArgs) Handles btnShow.Click
-    '    showObjectName()
-    'End Sub
-
-    Public Sub showOpject()
-        showObjectName()
-
     End Sub
 
+    Private Sub txtPartSerial_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPartSerial.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            'get Component 
+            txtDatecode.Text = ""
+            txtLotcode.Text = ""
+            txtSupplycode.Text = ""
+
+            Dim objModule As New Object
+            objModule = objApiService.getObjectByUrl(vUrl & "/api/module/" & txtPartSerial.Text.ToUpper & "/")
+
+            If Not objModule Is Nothing Then
+                'check Status
+                If objModule("status") = "D" Then
+                    MsgBox("Module : " & txtPartSerial.Text.ToUpper & " status is not valid",
+                       MsgBoxStyle.Critical, "Module status invalid")
+                    Exit Sub
+                End If
+
+                'check Parent (already assembled)
+                If Not objModule("parent") Is Nothing Then
+                    MsgBox("Module : " & txtPartSerial.Text.ToUpper & " already been assembled on other unit",
+                       MsgBoxStyle.Critical, "Module has been assembled")
+                    Exit Sub
+                End If
+
+                'check Reserved (reserved for)
+                If Not objModule("reserved_for") Is Nothing Then
+                    If objModule("reserved_for")("number") <> vSerialNumber Then
+                        MsgBox("Module : " & txtPartSerial.Text.ToUpper & " is reserved for " & objModule("reserved_for")("number"),
+                       MsgBoxStyle.Critical, "Module is reserved")
+                        Exit Sub
+                    End If
+
+                End If
 
 
-
-
-
-
-    '--------End Mandatory Funtion for all User Controls-------------
-
+                txtDatecode.Text = objModule("datecode")
+                txtLotcode.Text = objModule("lotcode")
+                txtSupplycode.Text = objModule("supcode")
+            Else
+                MsgBox("Module : " & txtPartSerial.Text.ToUpper & " doesn't exist in system",
+                       MsgBoxStyle.Critical, "Module not found")
+            End If
+        End If
+    End Sub
 End Class

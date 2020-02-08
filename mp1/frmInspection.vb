@@ -34,9 +34,11 @@ Public Class frmInspection
     Dim gOperationSlug As String
     Dim gOperationType As String
 
+    Dim gProduct As Object
     Dim gProductname As String
     Dim gProductSlug As String
 
+    Dim gWorkOrder As Object
     Dim gWorkOrdername As String
     Dim gWorkOrderSlug As String
 
@@ -266,7 +268,15 @@ Public Class frmInspection
 
             gSerialNumber = objSn
 
+            'get WorkOrder and Product
+            Dim oWorkOrders As New Object
             Dim vWorkOrder As String = objSn("workorder")
+            oWorkOrders = objApiService.getObjectByUrl(vUrl & "/api/workorder/?name=" & vWorkOrder)
+            If oWorkOrders("results").length > 0 Then
+                gWorkOrder = oWorkOrders("results")(0)
+                gProduct = objApiService.getObjectByUrl(gWorkOrder("product")("url"))
+            End If
+            '----------------------------
 
             If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
                 txtSn.Select(0, txtSn.TextLength)
@@ -1383,6 +1393,32 @@ Exit_Function:
         Return False
     End Function
 
+    Private Function addModule(strPerforming As Integer, strUser As String) As Boolean
+
+        Dim objModule As New clsModuleJson
+        With objModule
+            .number = gSerialNumber("number")
+            .pn = gProduct("fg_pn") 'part number for finished Good PN
+            .rev = gProduct("fg_rev") 'part number for finished Good Rev
+            .title = "import from workorder:" & gWorkOrder("name")
+            .last_operation = gOperationName
+            .datecode = ""
+            .lotcode = ""
+            .supcode = ""
+            .category1 = ""
+            .category2 = ""
+            .status = "A"
+            .pn_type = "BUILD"
+            .user = user_id
+        End With
+        Dim output As String = ""
+        Dim objResponse As Object
+        output = JsonConvert.SerializeObject(objModule)
+        objResponse = objApiService.SendRequest(vUrl & "/api/module/", output)
+
+        Return True
+    End Function
+
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
         '--------------------
 
@@ -1413,6 +1449,10 @@ Exit_Function:
         '--Do Parameter trasaction--
         addParametric(iPerforming, user_id)
 
+        '--if Move to End (Last operation) and Workorer Build type is Build to Build
+        '1)get Workorder Build Type
+        '-- system will also copy this unit to Module model.
+        'addModule(iPerforming, user_id)
 
 
         '--Hook --POST
@@ -1519,6 +1559,13 @@ Exit_Function:
 
         gSerialNumberSlug = gSerialNumber("slug")
         tssSn.Text = gSerialNumber("number") & " move to : " & moveToOperation
+
+        '---if Move next to Last operation and Workorder build type is Build to Build
+        '---Add this serial number to Module model.
+        If gCurrentRoutePosition = "L" And gWorkOrder("build_type") = "BUILD_TO_ORDER" Then
+            addModule(0, user_id)
+        End If
+
 
         Return True
     End Function
@@ -1636,6 +1683,7 @@ Exit_Function:
                 gProductRegExp = objProduct("regexp")
                 gCurrentRegExp = gProductRegExp
 
+                gProduct = objProduct
                 gProductname = objProduct("name")
                 gProductSlug = productSlug
 
@@ -1645,6 +1693,8 @@ Exit_Function:
                     'showCurrentRouting(objProduct("routing")("name"), operation)
                     'Exit Sub
                 End If
+            Else
+                gProduct = Nothing
             End If
         End If
 
@@ -1654,6 +1704,8 @@ Exit_Function:
             If Not objWorkOrder Is Nothing Then
                 gWorkOrdername = objWorkOrder("name")
                 gWorkOrderSlug = workorderSlug
+
+                gProduct = objWorkOrder("product")
 
                 If Not objWorkOrder("regexp") Is Nothing Then
                     gCurrentRegExp = objWorkOrder("regexp")

@@ -272,6 +272,7 @@ Public Class frmAssembly
                 .cache_url = vCacheUrl
                 .access_token = access_token
                 .routing = gCurrentRouteDetailUrl
+                .serialnumber = vSerialNumber
             End With
 
         End If
@@ -1070,6 +1071,10 @@ Exit_Function:
         lblOperation.Text = operationPropertyValue
         checkOperationType(operationPropertyValue)
 
+        With UcAssembly
+            .url = vUrl
+            .access_token = access_token
+        End With
 
     End Sub
 
@@ -1246,6 +1251,8 @@ Exit_Function:
         btnPass.Enabled = False
         btnFail.Enabled = False
         btnCancel.Enabled = False
+
+        UcAssembly.clear()
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

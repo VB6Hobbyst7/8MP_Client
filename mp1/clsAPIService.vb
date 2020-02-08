@@ -104,20 +104,25 @@ Public Class clsAPIService
     End Function
 
     Public Function getJsonObject(ByVal address As String) As Object
-        'Support request with Token
-        Dim request As WebRequest = WebRequest.Create(address)
-        request.Method = "GET"
-        Dim byteArray As Byte() = Encoding.UTF8.GetBytes("")
-        request.PreAuthenticate = True
-        request.Headers.Add("Authorization", "Bearer " + vAccessToken)
+        Try
+            'Support request with Token
+            Dim request As WebRequest = WebRequest.Create(address)
+            request.Method = "GET"
+            Dim byteArray As Byte() = Encoding.UTF8.GetBytes("")
+            request.PreAuthenticate = True
+            request.Headers.Add("Authorization", "Bearer " + vAccessToken)
 
-        Dim myHttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
-        Dim myWebSource As New StreamReader(myHttpWebResponse.GetResponseStream())
-        Dim myPageSource As String = myWebSource.ReadToEnd()
+            Dim myHttpWebResponse = CType(request.GetResponse(), HttpWebResponse)
+            Dim myWebSource As New StreamReader(myHttpWebResponse.GetResponseStream())
+            Dim myPageSource As String = myWebSource.ReadToEnd()
 
-        Dim jss = New JavaScriptSerializer()
-        Dim data As Object = jss.Deserialize(Of Object)(myPageSource)
-        Return data
+            Dim jss = New JavaScriptSerializer()
+            Dim data As Object = jss.Deserialize(Of Object)(myPageSource)
+            Return data
+        Catch ex As Exception
+            Return Nothing
+        End Try
+
     End Function
 
     Public Function getJsonString(ByVal address As String) As String

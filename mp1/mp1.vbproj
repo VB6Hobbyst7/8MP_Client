@@ -95,6 +95,7 @@
     <Compile Include="clsAPIService.vb" />
     <Compile Include="clsAuthentication.vb" />
     <Compile Include="clsIni.vb" />
+    <Compile Include="clsModuleJson.vb" />
     <Compile Include="clsMPFlex.vb" />
     <Compile Include="clsParametricJson.vb" />
     <Compile Include="clsPerformingJson.vb" />
