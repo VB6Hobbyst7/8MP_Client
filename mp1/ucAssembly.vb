@@ -110,6 +110,30 @@ Public Class ucAssembly
             vSerialNumber = value
         End Set
     End Property
+
+    Private vSerialNumberId As Long
+    Public Property serialnumberID() As Long
+        Get
+            Return vSerialNumberId
+        End Get
+        Set(ByVal value As Long)
+            vSerialNumberId = value
+        End Set
+    End Property
+
+    Private enableValue As Boolean
+    Public Property enable_control() As Boolean
+        Get
+            Return enableValue
+        End Get
+        Set(ByVal value As Boolean)
+            enableValue = value
+            Dim aa As Object
+            For Each aa In Me.Controls
+                aa.enabled = value
+            Next
+        End Set
+    End Property
     '-------------End Standard Property--------------
 
 
@@ -259,6 +283,13 @@ HasError:
 
     End Sub
 
+    Public Sub enable()
+        Dim aa As Object
+        For Each aa In Me.Controls
+            aa.enabled = True
+        Next
+    End Sub
+
     Sub showAssemblyProfile(objAssemblyUsage As Object)
         If objAssemblyUsage.length > 0 Then
             'first level "assembly"
@@ -366,6 +397,7 @@ HasError:
         If key <> "" Then
             objCurrentAssembly = objApiService.getObjectByUrl(AssemblySlug & "items/")
             dgProfile.Rows.Clear()
+            'Dim newObj = New Object() {"note"}
             For Each part In objCurrentAssembly
                 With dgProfile
                     Dim n As Integer = .Rows.Add()
@@ -374,6 +406,7 @@ HasError:
                     .Rows.Item(n).Cells(2).Value = part("part")("pn_type")
                     .Rows.Item(n).Cells(3).Value = part("part")("title")
                 End With
+
             Next
         End If
     End Sub

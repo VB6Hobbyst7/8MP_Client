@@ -273,6 +273,8 @@ Public Class frmAssembly
                 .access_token = access_token
                 .routing = gCurrentRouteDetailUrl
                 .serialnumber = vSerialNumber
+                .enable_control = True
+                .serialnumberID = gSerialNumber("id")
             End With
 
         End If
@@ -1253,6 +1255,7 @@ Exit_Function:
         btnCancel.Enabled = False
 
         UcAssembly.clear()
+        UcAssembly.enable_control = False
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
