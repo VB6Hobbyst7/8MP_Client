@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clsAPIService.vb" />
+    <Compile Include="clsAssembledJson.vb" />
     <Compile Include="clsAuthentication.vb" />
     <Compile Include="clsIni.vb" />
     <Compile Include="clsModuleJson.vb" />

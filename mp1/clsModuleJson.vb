@@ -1,8 +1,9 @@
 ﻿Imports System.Collections.Generic
+
 Public Class clsModuleJson
     Public Property number As String
-    Public Property parent As String
-    Public Property reserved_for As String
+    Public Property parent As clsSn
+    Public Property reserved_for As clsSn
     Public Property title As String
     Public Property category1 As String
     Public Property category2 As String
@@ -16,7 +17,14 @@ Public Class clsModuleJson
     Public Property status As String
     Public Property pn_type As String
     Public Property user As String
+
+    Public Class clsSn
+        Public Property number As String
+        Public Property workorder As String
+    End Class
 End Class
+
+
 
 '"number" "DDDD",
 '    "parent": null,

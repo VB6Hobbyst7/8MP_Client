@@ -17,6 +17,10 @@ Public Class ucAssembly
     Dim strSupplyCodeRegEx As String = String.Empty
     Dim strSerialNumberRegEx As String = String.Empty
 
+    Dim objAssembleds As New List(Of clsAssembledJson)
+
+    Dim intModuleId As Long
+
     Private routingDetailSlug As String 'Rotuing Detail URL
 
     'Public Sub New(url As String, token As String)
@@ -29,6 +33,16 @@ Public Class ucAssembly
     '    vUrl = url
 
     'End Sub
+
+
+    Public Property assembleds() As List(Of clsAssembledJson)
+        Get
+            Return objAssembleds
+        End Get
+        Set(ByVal value As List(Of clsAssembledJson))
+            objAssembleds = value
+        End Set
+    End Property
 
     Public Property routing() As String
         Get
@@ -118,6 +132,16 @@ Public Class ucAssembly
         End Get
         Set(ByVal value As Long)
             vSerialNumberId = value
+        End Set
+    End Property
+
+    Private vOperation As String
+    Public Property operation() As String
+        Get
+            Return vOperation
+        End Get
+        Set(ByVal value As String)
+            vOperation = value
         End Set
     End Property
 
@@ -394,10 +418,13 @@ HasError:
         Dim key As String = DirectCast(cbAssemblyProfile.SelectedItem, KeyValuePair(Of String, String)).Key
         Dim AssemblySlug As String = DirectCast(cbAssemblyProfile.SelectedItem, KeyValuePair(Of String, String)).Value 'slug
 
+        Dim objAssembled As clsAssembledJson
+
         If key <> "" Then
             objCurrentAssembly = objApiService.getObjectByUrl(AssemblySlug & "items/")
             dgProfile.Rows.Clear()
-            'Dim newObj = New Object() {"note"}
+
+            objAssembleds.Clear()
             For Each part In objCurrentAssembly
                 With dgProfile
                     Dim n As Integer = .Rows.Add()
@@ -406,15 +433,25 @@ HasError:
                     .Rows.Item(n).Cells(2).Value = part("part")("pn_type")
                     .Rows.Item(n).Cells(3).Value = part("part")("title")
                 End With
+                objAssembled = New clsAssembledJson
+                With objAssembled
+                    .number = vSerialNumberId
+                    .refdes = part("part")("rd")
+                    .pn = part("part")("pn")
+                    .pn_type = part("part")("pn_type")
+                    .operation = vOperation
+                    .action_status = True
+                    .user = user_id
+                End With
+
+                objAssembleds.Add(objAssembled)
 
             Next
         End If
     End Sub
 
 
-    Private Sub dgProfile_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgProfile.CellContentClick
 
-    End Sub
 
     Private Sub dgProfile_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgProfile.CellClick
         ' Get the current cell location.
@@ -425,6 +462,38 @@ HasError:
         lblRD.Text = dgProfile.Rows(y).Cells(x).Value
         'find RD in objCurrentAssembly , to get all item's RegEx
         setItemRegEx(lblRD.Text)
+        showAssembled(lblRD.Text)
+        btnAssembly.Enabled = False
+        btnReset.Enabled = True
+    End Sub
+
+    Sub showAssembled(rd As String)
+        'Dim assembled As New clsAssembledJson
+        txtPartId.Text = ""
+        txtPartSerial.Text = ""
+        txtNote.Text = ""
+        For Each assembled As clsAssembledJson In objAssembleds
+            With assembled
+
+                If .refdes = rd Then
+                    If .pn_type = "COMPONENT" Then
+                        '.component_number = vComponent 'component name
+                        '.module_number = Nothing
+                        txtPartId.Text = .component_number
+                        txtPartSerial.Text = ""
+                        getComponentItem(.component_number)
+                    Else
+                        '.component_number = Nothing
+                        '.module_number = vModule
+                        txtPartId.Text = ""
+                        txtPartSerial.Text = .module_name
+                    End If
+                    ' .note = vNote
+                    txtNote.Text = .note
+                    Exit For
+                End If
+            End With
+        Next
     End Sub
 
     Sub setItemRegEx(rd As String)
@@ -496,36 +565,63 @@ HasError:
     End Sub
 
     Private Sub txtPartSerial_TextChanged(sender As Object, e As EventArgs) Handles txtPartSerial.TextChanged
-        Dim reg_exp As New Regex("^" & strSerialNumberRegEx & "$")
-        If reg_exp.IsMatch(txtPartSerial.Text) Then
-            txtPartSerial.BackColor = Color.White
-        Else
-            txtPartSerial.BackColor = Color.Yellow
-        End If
+        'Dim reg_exp As New Regex("^" & strSerialNumberRegEx & "$")
+        'If reg_exp.IsMatch(txtPartSerial.Text) Then
+        '    txtPartSerial.BackColor = Color.White
+        'Else
+        '    txtPartSerial.BackColor = Color.Yellow
+        'End If
+
+        txtDatecode.Text = ""
+        txtLotcode.Text = ""
+        txtSupplycode.Text = ""
+        txtNote.Text = ""
+        btnAssembly.Enabled = False
+        btnReset.Enabled = True
     End Sub
 
     Private Sub txtPartId_TextChanged(sender As Object, e As EventArgs) Handles txtPartId.TextChanged
+        txtDatecode.Text = ""
+        txtLotcode.Text = ""
+        txtSupplycode.Text = ""
+        txtNote.Text = ""
 
+        btnAssembly.Enabled = False
+        btnReset.Enabled = True
     End Sub
 
     Private Sub txtPartId_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtPartId.KeyPress
         If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
-            'get Component 
-            txtDatecode.Text = ""
-            txtLotcode.Text = ""
-            txtSupplycode.Text = ""
+            getComponentItem(txtPartId.Text)
+        End If
+    End Sub
 
-            Dim objComponent As New Object
-            objComponent = objApiService.getObjectByUrl(vUrl & "/api/component/" & txtPartId.Text.ToUpper & "/")
+    Sub getComponentItem(component As String)
+        If component Is Nothing Then
+            Exit Sub
+        End If
+        'get Component 
+        txtDatecode.Text = ""
+        txtLotcode.Text = ""
+        txtSupplycode.Text = ""
 
-            If Not objComponent Is Nothing Then
-                txtDatecode.Text = objComponent("datecode")
-                txtLotcode.Text = objComponent("lotcode")
-                txtSupplycode.Text = objComponent("supcode")
-            Else
-                MsgBox("Component : " & txtPartId.Text.ToUpper & " doesn't exist in system",
-                       MsgBoxStyle.Critical, "Component not found")
-            End If
+        Dim objComponent As New Object
+        objComponent = objApiService.getObjectByUrl(vUrl & "/api/component/" & component.ToUpper & "/")
+
+        '----Check Part number with Assembly
+
+        '-----------------------------------
+
+
+        If Not objComponent Is Nothing Then
+            txtDatecode.Text = objComponent("datecode")
+            txtLotcode.Text = objComponent("lotcode")
+            txtSupplycode.Text = objComponent("supcode")
+            btnAssembly.Enabled = True
+        Else
+            btnAssembly.Enabled = False
+            MsgBox("Component : " & txtPartId.Text.ToUpper & " doesn't exist in system",
+                   MsgBoxStyle.Critical, "Component not found")
         End If
     End Sub
 
@@ -535,10 +631,10 @@ HasError:
             txtDatecode.Text = ""
             txtLotcode.Text = ""
             txtSupplycode.Text = ""
-
+            btnAssembly.Enabled = False
             Dim objModule As New Object
             objModule = objApiService.getObjectByUrl(vUrl & "/api/module/" & txtPartSerial.Text.ToUpper & "/")
-
+            intModuleId = objModule("id")
             If Not objModule Is Nothing Then
                 'check Status
                 If objModule("status") = "D" Then
@@ -564,14 +660,69 @@ HasError:
 
                 End If
 
+                btnAssembly.Enabled = True
 
                 txtDatecode.Text = objModule("datecode")
                 txtLotcode.Text = objModule("lotcode")
                 txtSupplycode.Text = objModule("supcode")
             Else
+                btnAssembly.Enabled = False
                 MsgBox("Module : " & txtPartSerial.Text.ToUpper & " doesn't exist in system",
                        MsgBoxStyle.Critical, "Module not found")
             End If
         End If
+    End Sub
+
+    Private Sub btnAssembly_Click(sender As Object, e As EventArgs) Handles btnAssembly.Click
+        updateAssembled(lblRD.Text, txtPartId.Text, intModuleId, txtNote.Text)
+        MsgBox("Assembly has been saved", MsgBoxStyle.Information, "Done")
+    End Sub
+
+    Sub updateAssembled(rd As String,
+                        vComponent As String, vModule As Long,
+                        vNote As String)
+        'Dim assembled As New clsAssembledJson
+        For Each assembled As clsAssembledJson In objAssembleds
+            With assembled
+                If .refdes = rd Then
+                    If .pn_type = "COMPONENT" Then
+                        .component_number = vComponent 'component name
+                        .module_number = Nothing
+                    Else
+                        .component_number = Nothing
+                        .module_number = vModule
+                        .module_name = txtPartSerial.Text
+                    End If
+                    .note = vNote
+                    Exit For
+                End If
+            End With
+        Next
+    End Sub
+
+    Sub clearAssembled(rd As String)
+        'Dim assembled As New clsAssembledJson
+        txtDatecode.Text = ""
+        txtLotcode.Text = ""
+        txtSupplycode.Text = ""
+        txtPartId.Text = ""
+        txtPartSerial.Text = ""
+        txtNote.Text = ""
+        For Each assembled As clsAssembledJson In objAssembleds
+            With assembled
+                If .refdes = rd Then
+                    .module_number = Nothing
+                    .component_number = Nothing
+                    .note = Nothing
+                    Exit For
+                End If
+            End With
+        Next
+    End Sub
+
+
+
+    Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
+        clearAssembled(lblRD.Text)
     End Sub
 End Class

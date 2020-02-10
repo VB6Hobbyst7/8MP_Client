@@ -218,6 +218,7 @@ Partial Class ucAssembly
         'btnAssembly
         '
         Me.btnAssembly.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnAssembly.Enabled = False
         Me.btnAssembly.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.btnAssembly.Location = New System.Drawing.Point(599, 324)
         Me.btnAssembly.Name = "btnAssembly"

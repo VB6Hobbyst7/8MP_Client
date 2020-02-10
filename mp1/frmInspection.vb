@@ -1562,7 +1562,7 @@ Exit_Function:
 
         '---if Move next to Last operation and Workorder build type is Build to Build
         '---Add this serial number to Module model.
-        If gCurrentRoutePosition = "L" And gWorkOrder("build_type") = "BUILD_TO_ORDER" Then
+        If gCurrentRoutePosition = "L" And gWorkOrder("build_type") = "BUILD_TO_BUILD" Then
             addModule(0, user_id)
         End If
 

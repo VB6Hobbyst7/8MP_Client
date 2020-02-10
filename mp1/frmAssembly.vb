@@ -275,6 +275,7 @@ Public Class frmAssembly
                 .serialnumber = vSerialNumber
                 .enable_control = True
                 .serialnumberID = gSerialNumber("id")
+                .operation = gOperationName
             End With
 
         End If
@@ -1323,6 +1324,63 @@ Exit_Function:
         reset()
     End Sub
 
+
+    Private Function addAssembled(strPerforming As Integer, strUser As String) As Boolean
+
+        Dim ass As New List(Of clsAssembledJson)
+        ass = UcAssembly.assembleds
+        For Each a In ass
+            Dim output As String = ""
+            Dim vModuleName As String = a.module_name
+
+            Dim objResponse As Object
+            output = JsonConvert.SerializeObject(a)
+            output = output.Replace(",""module_number"":0", "")
+            objResponse = objApiService.SendRequest(vUrl & "/api/assembled/", output)
+            'if part is MODULE , need to set parent field
+            If a.pn_type <> "COMPONENT" Then
+                'Dim objModule As New clsModuleJson
+                'Dim objSerialNumber As New clsModuleJson.clsSn
+                'With objSerialNumber
+                '    .number = gSerialNumber("number")
+                '    .workorder = gSerialNumber("workorder")
+                'End With
+                Dim objMM As Object
+                objMM = objApiService.getObjectByUrl(vUrl & "/api/module/" & vModuleName & "/")
+
+                'Dim listSn As New List(Of Object)
+                'Dim pairSn As KeyValuePair(Of String, String) = New KeyValuePair(Of String, String)("number", gSerialNumber("number"))
+                'Dim pairWorkOrder As KeyValuePair(Of String, String) = New KeyValuePair(Of String, String)("workorder", gSerialNumber("workorder"))
+                'listSn.Add(pairSn)
+                'listSn.Add(pairWorkOrder)
+
+                'Dim dictionary As New Dictionary(Of String, String)
+                'dictionary.Add("number", gSerialNumber("number"))
+                'dictionary.Add("workorder", gSerialNumber("workorder"))
+
+
+                With objMM
+                    objMM("parent") = gSerialNumber("id")
+                    objMM("last_operation") = gOperationName
+                    objMM("last_modified_date") = Now.ToLocalTime.ToString("o")
+                End With
+
+                Dim jss = New JavaScriptSerializer()
+                Dim strUpdateJson As String = ""
+                strUpdateJson = jss.Serialize(objMM)
+
+                'update Serial number (Current,Last operation)
+                Dim objSnReturned As Object
+                objSnReturned = objApiService.SendRequest(objMM("url"), strUpdateJson,
+                                                          "application/json", "PATCH")
+
+
+            End If
+        Next
+
+        Return False
+    End Function
+
     Private Function addParametric(strPerforming As Integer, strUser As String) As Boolean
         'Dim strId As String
         'Dim strKey As String
@@ -1358,7 +1416,6 @@ Exit_Function:
     Private Sub btnPass_Click(sender As Object, e As EventArgs) Handles btnPass.Click
         '--------------------
 
-
         '--------------------
         Dim vMoveTo As String = checkNextCondition(gNextPass)
         If vMoveTo <> gNextPass Then
@@ -1380,6 +1437,9 @@ Exit_Function:
         'doPerforming(vMoveTo, True)
         Dim iPerforming As Long
         iPerforming = doPerforming(vMoveTo, True)
+
+        '--Add assembly--
+        addAssembled(iPerforming, user_id)
 
 
         '--Do Parameter trasaction--
