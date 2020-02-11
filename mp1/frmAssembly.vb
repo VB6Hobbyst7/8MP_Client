@@ -266,7 +266,10 @@ Public Class frmAssembly
             btnFail.Enabled = True
 
             'Parameter
-            'CreateObject(gCurrentRouteDetailUrl)
+            CreateObject(gCurrentRouteDetailUrl)
+
+
+
             With UcAssembly
                 .url = vUrl
                 .cache_url = vCacheUrl
@@ -693,7 +696,7 @@ Exit_Function:
         Dim pInitialPoint As Point
         Dim iParameterIndex As Integer = 0
         For Each vParamSlug In objRoutingDetail("parameter")
-            pInitialPoint = New Point(5 + (380 * iParameterIndex), txtComment.Top + txtComment.Height + 10)
+            pInitialPoint = New Point(lblParameter.Left + (380 * iParameterIndex), lblParameter.Top + lblParameter.Height + 10)
             '-----get Parameter Object----
             objParam = objApiService.getObjectByUrl(vParamSlug)
             If objParam("status") = "D" Then

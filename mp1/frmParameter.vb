@@ -1196,9 +1196,7 @@ Exit_Function:
             Dim comboSource As New Dictionary(Of String, String)()
             comboSource.Add("", "---")
             For Each product In products
-                comboSource.Add(product("name") & ":" &
-                                product("title"), product("slug")
-                                )
+                comboSource.Add(product("name"), product("slug"))
             Next
             With cbProduct
                 .DropDownStyle = ComboBoxStyle.DropDownList
@@ -1216,7 +1214,7 @@ Exit_Function:
         Dim workorder As Object = Nothing
 
         If vProductSlug <> "" Then
-            workorders = objApiService.getJsonObject(vUrl + "/api/workorder/?product__slug=" &
+            workorders = objApiService.getJsonObject(vUrl + "/api/workorder/?product__name=" &
                                                      vProductSlug & "&status=A")("results")
         End If
 
@@ -1228,8 +1226,7 @@ Exit_Function:
 
             comboSource.Add("", "---")
             For Each workorder In workorders
-                comboSource.Add(workorder("name") & ":" &
-                                workorder("title"), workorder("slug")
+                comboSource.Add(workorder("name"), workorder("slug")
                                 )
             Next
             With cbWorkOrder
@@ -1751,7 +1748,7 @@ Exit_Function:
         If key = "" Then
             Exit Sub
         End If
-        getWorkOrders(ProductSlug)
+        getWorkOrders(key)
         verifyCurrentRouting(gOperationSlug, ProductSlug, "")
     End Sub
 

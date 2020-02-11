@@ -53,6 +53,7 @@ Partial Class frmAssembly
         Me.lblOperation = New System.Windows.Forms.Label()
         Me.btnSnippet = New System.Windows.Forms.Button()
         Me.UcAssembly = New mp.ucAssembly()
+        Me.lblParameter = New System.Windows.Forms.Label()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -120,7 +121,7 @@ Partial Class frmAssembly
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tss1, Me.tts1, Me.tss2, Me.tssSn})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 599)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(870, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1000, 22)
         Me.StatusStrip1.TabIndex = 6
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -170,7 +171,7 @@ Partial Class frmAssembly
         '
         Me.btnPass.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPass.Enabled = False
-        Me.btnPass.Location = New System.Drawing.Point(749, 555)
+        Me.btnPass.Location = New System.Drawing.Point(879, 555)
         Me.btnPass.Name = "btnPass"
         Me.btnPass.Size = New System.Drawing.Size(109, 41)
         Me.btnPass.TabIndex = 10
@@ -182,7 +183,7 @@ Partial Class frmAssembly
         '
         Me.btnFail.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFail.Enabled = False
-        Me.btnFail.Location = New System.Drawing.Point(634, 555)
+        Me.btnFail.Location = New System.Drawing.Point(764, 555)
         Me.btnFail.Name = "btnFail"
         Me.btnFail.Size = New System.Drawing.Size(109, 41)
         Me.btnFail.TabIndex = 11
@@ -310,7 +311,7 @@ Partial Class frmAssembly
         'btnSnippet
         '
         Me.btnSnippet.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSnippet.Location = New System.Drawing.Point(850, 12)
+        Me.btnSnippet.Location = New System.Drawing.Point(980, 12)
         Me.btnSnippet.Name = "btnSnippet"
         Me.btnSnippet.Size = New System.Drawing.Size(20, 22)
         Me.btnSnippet.TabIndex = 27
@@ -323,20 +324,35 @@ Partial Class frmAssembly
         Me.UcAssembly.access_token = Nothing
         Me.UcAssembly.cache_url = Nothing
         Me.UcAssembly.CurrentForm = Nothing
+        Me.UcAssembly.enable_control = False
         Me.UcAssembly.Location = New System.Drawing.Point(19, 161)
         Me.UcAssembly.Name = "UcAssembly"
+        Me.UcAssembly.operation = Nothing
         Me.UcAssembly.ParentObjectName = Nothing
         Me.UcAssembly.product = Nothing
         Me.UcAssembly.routing = Nothing
+        Me.UcAssembly.serialnumber = Nothing
+        Me.UcAssembly.serialnumberID = CType(0, Long)
         Me.UcAssembly.Size = New System.Drawing.Size(839, 388)
         Me.UcAssembly.TabIndex = 28
         Me.UcAssembly.url = Nothing
+        '
+        'lblParameter
+        '
+        Me.lblParameter.AutoSize = True
+        Me.lblParameter.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblParameter.Location = New System.Drawing.Point(875, 161)
+        Me.lblParameter.Name = "lblParameter"
+        Me.lblParameter.Size = New System.Drawing.Size(164, 20)
+        Me.lblParameter.TabIndex = 29
+        Me.lblParameter.Text = "Performing Parameter"
         '
         'frmAssembly
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(870, 621)
+        Me.ClientSize = New System.Drawing.Size(1000, 621)
+        Me.Controls.Add(Me.lblParameter)
         Me.Controls.Add(Me.UcAssembly)
         Me.Controls.Add(Me.btnSnippet)
         Me.Controls.Add(Me.lblOperation)
@@ -401,4 +417,5 @@ Partial Class frmAssembly
     Friend WithEvents lblOperation As Label
     Friend WithEvents btnSnippet As Button
     Friend WithEvents UcAssembly As ucAssembly
+    Friend WithEvents lblParameter As Label
 End Class
