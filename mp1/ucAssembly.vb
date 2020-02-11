@@ -20,6 +20,7 @@ Public Class ucAssembly
     Dim objAssembleds As New List(Of clsAssembledJson)
 
     Dim intModuleId As Long
+    Dim gCurrentItemSlug As String
 
     Private routingDetailSlug As String 'Rotuing Detail URL
 
@@ -35,13 +36,13 @@ Public Class ucAssembly
     'End Sub
 
 
-    Public Property assembleds() As List(Of clsAssembledJson)
+    Public ReadOnly Property assembleds() As List(Of clsAssembledJson)
         Get
             Return objAssembleds
         End Get
-        Set(ByVal value As List(Of clsAssembledJson))
-            objAssembleds = value
-        End Set
+        'Set(ByVal value As List(Of clsAssembledJson))
+        '    objAssembleds = value
+        'End Set
     End Property
 
     Public Property routing() As String
@@ -460,6 +461,7 @@ HasError:
 
         ' Write coordinates to console.
         lblRD.Text = dgProfile.Rows(y).Cells(x).Value
+        lblPN.text = dgProfile.Rows(y).Cells(x + 1).Value
         'find RD in objCurrentAssembly , to get all item's RegEx
         setItemRegEx(lblRD.Text)
         showAssembled(lblRD.Text)
@@ -482,11 +484,21 @@ HasError:
                         txtPartId.Text = .component_number
                         txtPartSerial.Text = ""
                         getComponentItem(.component_number)
+
+                        txtDatecode.Enabled = True
+                        txtLotcode.Enabled = True
+                        txtSupplycode.Enabled = True
+
                     Else
                         '.component_number = Nothing
                         '.module_number = vModule
                         txtPartId.Text = ""
                         txtPartSerial.Text = .module_name
+
+                        txtDatecode.Enabled = False
+                        txtLotcode.Enabled = False
+                        txtSupplycode.Enabled = False
+
                     End If
                     ' .note = vNote
                     txtNote.Text = .note
@@ -503,17 +515,26 @@ HasError:
         strSerialNumberRegEx = ""
         For Each part In objCurrentAssembly
             If part("part")("rd") = rd Then
+                gCurrentItemSlug = part("slug")
                 If part("part")("pn_type") = "COMPONENT" Then
                     txtPartId.Enabled = True
                     lblPartId.Enabled = True
                     txtPartSerial.Enabled = False
                     lblSerialnumber.Enabled = False
+
+                    txtDatecode.Enabled = True
+                    txtLotcode.Enabled = True
+                    txtSupplycode.Enabled = True
+
                     txtPartId.Select()
                 Else
                     txtPartId.Enabled = False
                     lblPartId.Enabled = False
                     txtPartSerial.Enabled = True
                     lblSerialnumber.Enabled = True
+
+
+
                     txtPartSerial.Select()
                 End If
 
@@ -538,46 +559,67 @@ HasError:
     End Sub
 
     Private Sub txtDatecode_TextChanged(sender As Object, e As EventArgs) Handles txtDatecode.TextChanged
-        Dim reg_exp As New Regex("^" & strDateCodeRegEx & "$")
-        If reg_exp.IsMatch(txtDatecode.Text) Then
+        Dim reg_exp_dc As New Regex("^" & strDateCodeRegEx & "$")
+        If reg_exp_dc.IsMatch(txtDatecode.Text) Then
             txtDatecode.BackColor = Color.White
         Else
             txtDatecode.BackColor = Color.Yellow
         End If
+        validatePartItem()
     End Sub
 
     Private Sub txtLotcode_TextChanged(sender As Object, e As EventArgs) Handles txtLotcode.TextChanged
-        Dim reg_exp As New Regex("^" & strLotCodeRegEx & "$")
-        If reg_exp.IsMatch(txtLotcode.Text) Then
+        Dim reg_exp_lc As New Regex("^" & strLotCodeRegEx & "$")
+        If reg_exp_lc.IsMatch(txtLotcode.Text) Then
             txtLotcode.BackColor = Color.White
         Else
             txtLotcode.BackColor = Color.Yellow
         End If
+        validatePartItem()
     End Sub
 
     Private Sub txtSupplycode_TextChanged(sender As Object, e As EventArgs) Handles txtSupplycode.TextChanged
-        Dim reg_exp As New Regex("^" & strSupplyCodeRegEx & "$")
-        If reg_exp.IsMatch(txtSupplycode.Text) Then
+        Dim reg_exp_sc As New Regex("^" & strSupplyCodeRegEx & "$")
+        If reg_exp_sc.IsMatch(txtSupplycode.Text) Then
             txtSupplycode.BackColor = Color.White
         Else
             txtSupplycode.BackColor = Color.Yellow
         End If
+        validatePartItem()
+    End Sub
+
+    Sub validatePartItem()
+        'date code
+        Dim reg_exp_dc As New Regex("^" & strDateCodeRegEx & "$")
+        Dim reg_exp_lc As New Regex("^" & strLotCodeRegEx & "$")
+        Dim reg_exp_sc As New Regex("^" & strSupplyCodeRegEx & "$")
+
+        If reg_exp_dc.IsMatch(txtDatecode.Text) And reg_exp_lc.IsMatch(txtLotcode.Text) _
+            And reg_exp_sc.IsMatch(txtSupplycode.Text) Then
+            btnAssembly.Enabled = True
+            btnReset.Enabled = False
+        Else
+            btnAssembly.Enabled = False
+            btnReset.Enabled = True
+        End If
+
     End Sub
 
     Private Sub txtPartSerial_TextChanged(sender As Object, e As EventArgs) Handles txtPartSerial.TextChanged
-        'Dim reg_exp As New Regex("^" & strSerialNumberRegEx & "$")
-        'If reg_exp.IsMatch(txtPartSerial.Text) Then
-        '    txtPartSerial.BackColor = Color.White
-        'Else
-        '    txtPartSerial.BackColor = Color.Yellow
-        'End If
 
-        txtDatecode.Text = ""
-        txtLotcode.Text = ""
-        txtSupplycode.Text = ""
-        txtNote.Text = ""
-        btnAssembly.Enabled = False
-        btnReset.Enabled = True
+        Dim reg_exp As New Regex("^" & strSerialNumberRegEx & "$")
+        If reg_exp.IsMatch(txtPartSerial.Text) Then
+            txtPartSerial.BackColor = Color.White
+            btnAssembly.Enabled = False
+            btnReset.Enabled = True
+        Else
+            txtPartSerial.BackColor = Color.Yellow
+
+            btnAssembly.Enabled = False
+            btnReset.Enabled = True
+        End If
+
+
     End Sub
 
     Private Sub txtPartId_TextChanged(sender As Object, e As EventArgs) Handles txtPartId.TextChanged
@@ -635,7 +677,18 @@ HasError:
             Dim objModule As New Object
             objModule = objApiService.getObjectByUrl(vUrl & "/api/module/" & txtPartSerial.Text.ToUpper & "/")
             intModuleId = objModule("id")
+
+
+
             If Not objModule Is Nothing Then
+
+                'Check Part number on Assembly and actual part must be match.
+                If objModule("pn") <> lblPN.Text Then
+                    MsgBox("Part number is mis-match", MsgBoxStyle.Critical, "Mis-match Part number")
+                    Exit Sub
+                End If
+                '---------------------------
+
                 'check Status
                 If objModule("status") = "D" Then
                     MsgBox("Module : " & txtPartSerial.Text.ToUpper & " status is not valid",
@@ -724,5 +777,17 @@ HasError:
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
         clearAssembled(lblRD.Text)
+    End Sub
+
+    Private Sub dgProfile_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgProfile.CellContentClick
+
+    End Sub
+
+    Private Sub lblRD_Click(sender As Object, e As EventArgs) Handles lblRD.Click
+        Process.Start(vUrl & "/assembly/item/" & gCurrentItemSlug)
+    End Sub
+
+    Private Sub cbAssemblyProfile_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbAssemblyProfile.SelectedIndexChanged
+
     End Sub
 End Class

@@ -48,6 +48,7 @@ Partial Class ucAssembly
         Me.txtPartId = New System.Windows.Forms.TextBox()
         Me.lblPartId = New System.Windows.Forms.Label()
         Me.chkMsd = New System.Windows.Forms.CheckBox()
+        Me.lblPN = New System.Windows.Forms.Label()
         CType(Me.dgProfile, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -288,10 +289,21 @@ Partial Class ucAssembly
         Me.chkMsd.Text = "MSD Control"
         Me.chkMsd.UseVisualStyleBackColor = True
         '
+        'lblPN
+        '
+        Me.lblPN.AutoSize = True
+        Me.lblPN.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblPN.Location = New System.Drawing.Point(679, 53)
+        Me.lblPN.Name = "lblPN"
+        Me.lblPN.Size = New System.Drawing.Size(16, 13)
+        Me.lblPN.TabIndex = 22
+        Me.lblPN.Text = "..."
+        '
         'ucAssembly
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.lblPN)
         Me.Controls.Add(Me.chkMsd)
         Me.Controls.Add(Me.lblPartId)
         Me.Controls.Add(Me.txtPartId)
@@ -348,4 +360,5 @@ Partial Class ucAssembly
     Friend WithEvents txtPartId As TextBox
     Friend WithEvents lblPartId As Label
     Friend WithEvents chkMsd As CheckBox
+    Friend WithEvents lblPN As Label
 End Class
