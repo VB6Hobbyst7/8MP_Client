@@ -152,6 +152,12 @@ Public Class ucAssembly
             Return enableValue
         End Get
         Set(ByVal value As Boolean)
+            txtDatecode.Text = "" : txtDatecode.BackColor = Color.White
+            txtLotcode.Text = "" : txtLotcode.BackColor = Color.White
+            txtSupplycode.Text = "" : txtSupplycode.BackColor = Color.White
+            txtPartId.Text = "" : txtPartId.BackColor = Color.White
+            txtPartSerial.Text = "" : txtPartSerial.BackColor = Color.White
+            txtNote.Text = "" : txtNote.BackColor = Color.White
             enableValue = value
             Dim aa As Object
             For Each aa In Me.Controls
@@ -676,7 +682,7 @@ HasError:
             btnAssembly.Enabled = False
             Dim objModule As New Object
             objModule = objApiService.getObjectByUrl(vUrl & "/api/module/" & txtPartSerial.Text.ToUpper & "/")
-            intModuleId = objModule("id")
+
 
 
 
@@ -713,6 +719,7 @@ HasError:
 
                 End If
 
+                intModuleId = objModule("id")
                 btnAssembly.Enabled = True
 
                 txtDatecode.Text = objModule("datecode")

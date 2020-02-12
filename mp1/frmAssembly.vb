@@ -43,6 +43,8 @@ Public Class frmAssembly
     Dim gSerialNumber As Object
     Dim gSerialNumberSlug As String
 
+    Dim gStartDateTime As DateTime
+
     Private operationPropertyValue As String
     Public Property operation() As String
         Get
@@ -255,15 +257,16 @@ Public Class frmAssembly
                 End If
             Else
                 '---Stamp Perform
+                gStartDateTime = Now.ToLocalTime.ToString("o")
                 setPerformSerialNumber(True, vSelectedOpr)
             End If
             '-------------------
-
+            gStartDateTime = Now.ToLocalTime.ToString("o")
             btnCancel.Enabled = True
             btnStart.Enabled = False
             txtSn.Enabled = False
             btnPass.Enabled = True
-            btnFail.Enabled = True
+            'btnFail.Enabled = True
 
             'Parameter
             CreateObject(gCurrentRouteDetailUrl)
@@ -377,8 +380,8 @@ Public Class frmAssembly
             .interval = 1
             .resource_name = gHostName
             .remark = vNote
-            .start_time = Now
-            .stop_time = Now
+            .start_time = Now.ToLocalTime.ToString("o")
+            .stop_time = Now.ToLocalTime.ToString("o")
             .user = user_id
         End With
         output = JsonConvert.SerializeObject(performing)
@@ -1255,7 +1258,7 @@ Exit_Function:
         btnRefresh.Enabled = False
 
         btnPass.Enabled = False
-        btnFail.Enabled = False
+        'btnFail.Enabled = False
         btnCancel.Enabled = False
 
         UcAssembly.clear()
@@ -1296,36 +1299,36 @@ Exit_Function:
         End If
     End Sub
 
-    Private Sub btnFail_Click(sender As Object, e As EventArgs) Handles btnFail.Click
-        'checkNextCondition(vDefaultNextFailOperation)
-        Dim vMoveTo As String = checkNextCondition(gNextFail)
-        If vMoveTo <> gNextFail Then
-            If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
-                   "System will move unit to operation " & vMoveTo,
-                   MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
-                MsgBox("cancel")
-            End If
-        End If
+    'Private Sub btnFail_Click(sender As Object, e As EventArgs) 
+    '    'checkNextCondition(vDefaultNextFailOperation)
+    '    Dim vMoveTo As String = checkNextCondition(gNextFail)
+    '    If vMoveTo <> gNextFail Then
+    '        If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+    '               "System will move unit to operation " & vMoveTo,
+    '               MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+    '            MsgBox("cancel")
+    '        End If
+    '    End If
 
 
-        '--Hook --PRE
-        If Not executeHook("PRE", btnFail.Name) Then
-            Exit Sub
-        End If
+    '    '--Hook --PRE
+    '    If Not executeHook("PRE", btnFail.Name) Then
+    '        Exit Sub
+    '    End If
 
-        '--Do transaction
-        Dim iPerforming As Long
-        iPerforming = doPerforming(vMoveTo, False)
-        '--Do Parameter trasaction--
-        addParametric(iPerforming, user_id)
+    '    '--Do transaction
+    '    Dim iPerforming As Long
+    '    iPerforming = doPerforming(vMoveTo, False)
+    '    '--Do Parameter trasaction--
+    '    addParametric(iPerforming, user_id)
 
-        '--Hook --POST
-        If Not executeHook("POST", btnFail.Name) Then
-            Exit Sub
-        End If
+    '    '--Hook --POST
+    '    If Not executeHook("POST", btnFail.Name) Then
+    '        Exit Sub
+    '    End If
 
-        reset()
-    End Sub
+    '    reset()
+    'End Sub
 
 
     Private Function addAssembled(strPerforming As Integer, strUser As String) As Boolean
@@ -1511,7 +1514,7 @@ Exit_Function:
             .interval = 1
             .resource_name = gHostName
             .remark = vNote
-            .start_time = gSerialNumber("perform_start_date")
+            .start_time = gStartDateTime 'gSerialNumber("perform_start_date")
             .stop_time = Now.ToLocalTime.ToString("o")
             .user = user_id
         End With

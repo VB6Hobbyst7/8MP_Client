@@ -45,6 +45,8 @@ Public Class frmParameter
 
     Dim gPerformingNumber As Long
 
+    Dim gStartDateTime As DateTime
+
     Private operationPropertyValue As String
     Public Property operation() As String
         Get
@@ -245,6 +247,8 @@ Public Class frmParameter
             End If
             '------------
 
+            gStartDateTime = Now.ToLocalTime.ToString("o")
+
             'Show Parameter
             CreateObject(gCurrentRouteDetailUrl)
 
@@ -394,8 +398,8 @@ Public Class frmParameter
             .interval = 1
             .resource_name = gHostName
             .remark = vNote
-            .start_time = Now
-            .stop_time = Now
+            .start_time = gStartDateTime
+            .stop_time = Now.ToLocalTime.ToString("o")
             .user = user_id
         End With
         output = JsonConvert.SerializeObject(performing)

@@ -418,8 +418,8 @@ Public Class frmInspection
             .interval = 1
             .resource_name = gHostName
             .remark = vNote
-            .start_time = Now
-            .stop_time = Now
+            .start_time = Now.ToLocalTime.ToString("o")
+            .stop_time = Now.ToLocalTime.ToString("o")
             .user = user_id
         End With
         output = JsonConvert.SerializeObject(performing)

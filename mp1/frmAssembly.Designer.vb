@@ -38,7 +38,6 @@ Partial Class frmAssembly
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnPass = New System.Windows.Forms.Button()
-        Me.btnFail = New System.Windows.Forms.Button()
         Me.lblCapNextPass = New System.Windows.Forms.Label()
         Me.lblCapNextFail = New System.Windows.Forms.Label()
         Me.lblCapRoute = New System.Windows.Forms.Label()
@@ -178,18 +177,6 @@ Partial Class frmAssembly
         Me.btnPass.TabStop = False
         Me.btnPass.Text = "Pass"
         Me.btnPass.UseVisualStyleBackColor = True
-        '
-        'btnFail
-        '
-        Me.btnFail.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFail.Enabled = False
-        Me.btnFail.Location = New System.Drawing.Point(764, 555)
-        Me.btnFail.Name = "btnFail"
-        Me.btnFail.Size = New System.Drawing.Size(109, 41)
-        Me.btnFail.TabIndex = 11
-        Me.btnFail.TabStop = False
-        Me.btnFail.Text = "Fail"
-        Me.btnFail.UseVisualStyleBackColor = True
         '
         'lblCapNextPass
         '
@@ -366,7 +353,6 @@ Partial Class frmAssembly
         Me.Controls.Add(Me.lblCapRoute)
         Me.Controls.Add(Me.lblCapNextFail)
         Me.Controls.Add(Me.lblCapNextPass)
-        Me.Controls.Add(Me.btnFail)
         Me.Controls.Add(Me.btnPass)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.Label3)
@@ -401,7 +387,6 @@ Partial Class frmAssembly
     Friend WithEvents tss2 As ToolStripStatusLabel
     Friend WithEvents btnCancel As Button
     Friend WithEvents btnPass As Button
-    Friend WithEvents btnFail As Button
     Friend WithEvents lblCapNextPass As Label
     Friend WithEvents lblCapNextFail As Label
     Friend WithEvents lblCapRoute As Label
