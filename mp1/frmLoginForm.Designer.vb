@@ -42,6 +42,7 @@ Partial Class frmLoginForm
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.btnOpen = New System.Windows.Forms.Button()
         Me.cbOperation = New System.Windows.Forms.ComboBox()
+        Me.lblServer = New System.Windows.Forms.Label()
         CType(Me.LogoPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -146,6 +147,15 @@ Partial Class frmLoginForm
         Me.cbOperation.Size = New System.Drawing.Size(284, 26)
         Me.cbOperation.TabIndex = 8
         '
+        'lblServer
+        '
+        Me.lblServer.ForeColor = System.Drawing.Color.Blue
+        Me.lblServer.Location = New System.Drawing.Point(172, 1)
+        Me.lblServer.Name = "lblServer"
+        Me.lblServer.Size = New System.Drawing.Size(220, 23)
+        Me.lblServer.TabIndex = 8
+        Me.lblServer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'frmLoginForm
         '
         Me.AcceptButton = Me.OK
@@ -153,6 +163,7 @@ Partial Class frmLoginForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel
         Me.ClientSize = New System.Drawing.Size(401, 237)
+        Me.Controls.Add(Me.lblServer)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.Cancel)
@@ -181,4 +192,5 @@ Partial Class frmLoginForm
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents btnOpen As Button
     Friend WithEvents cbOperation As ComboBox
+    Friend WithEvents lblServer As Label
 End Class
