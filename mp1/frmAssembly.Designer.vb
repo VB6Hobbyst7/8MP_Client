@@ -53,6 +53,8 @@ Partial Class frmAssembly
         Me.btnSnippet = New System.Windows.Forms.Button()
         Me.UcAssembly = New mp.ucAssembly()
         Me.lblParameter = New System.Windows.Forms.Label()
+        Me.lblOprChoice = New System.Windows.Forms.Label()
+        Me.cbOperationChoice = New System.Windows.Forms.ComboBox()
         Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -334,11 +336,36 @@ Partial Class frmAssembly
         Me.lblParameter.TabIndex = 29
         Me.lblParameter.Text = "Performing Parameter"
         '
+        'lblOprChoice
+        '
+        Me.lblOprChoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblOprChoice.AutoSize = True
+        Me.lblOprChoice.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblOprChoice.Location = New System.Drawing.Point(388, 564)
+        Me.lblOprChoice.Name = "lblOprChoice"
+        Me.lblOprChoice.Size = New System.Drawing.Size(140, 20)
+        Me.lblOprChoice.TabIndex = 32
+        Me.lblOprChoice.Text = "Operation Choice :"
+        Me.lblOprChoice.Visible = False
+        '
+        'cbOperationChoice
+        '
+        Me.cbOperationChoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cbOperationChoice.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cbOperationChoice.FormattingEnabled = True
+        Me.cbOperationChoice.Location = New System.Drawing.Point(534, 562)
+        Me.cbOperationChoice.Name = "cbOperationChoice"
+        Me.cbOperationChoice.Size = New System.Drawing.Size(339, 26)
+        Me.cbOperationChoice.TabIndex = 31
+        Me.cbOperationChoice.Visible = False
+        '
         'frmAssembly
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1000, 621)
+        Me.Controls.Add(Me.lblOprChoice)
+        Me.Controls.Add(Me.cbOperationChoice)
         Me.Controls.Add(Me.lblParameter)
         Me.Controls.Add(Me.UcAssembly)
         Me.Controls.Add(Me.btnSnippet)
@@ -403,4 +430,6 @@ Partial Class frmAssembly
     Friend WithEvents btnSnippet As Button
     Friend WithEvents UcAssembly As ucAssembly
     Friend WithEvents lblParameter As Label
+    Friend WithEvents lblOprChoice As Label
+    Friend WithEvents cbOperationChoice As ComboBox
 End Class

@@ -46,6 +46,7 @@ Public Class frmParameter
     Dim gPerformingNumber As Long
 
     Dim gStartDateTime As DateTime
+    Dim gHasOperationChoice As Boolean
 
     Private operationPropertyValue As String
     Public Property operation() As String
@@ -251,76 +252,8 @@ Public Class frmParameter
 
             'Show Parameter
             CreateObject(gCurrentRouteDetailUrl)
+            gHasOperationChoice = showOperationChoice(gCurrentRouteDetailUrl)
 
-
-            'If registerSerialNUmber(vSerialNumber, gWorkOrdername,
-            '                        gOperationName, gCurrentRoute, txtComment.Text) Then
-            '    MsgBox("Register unit : " & vSerialNumber & " has been done.", MsgBoxStyle.Information, "Register done")
-            '    btnStart.Enabled = False
-            '    btnRefresh.Enabled = True
-            '    txtSn.Text = ""
-            '    txtSn.Select()
-            'Else
-            '    MsgBox("Register unit : " & vSerialNumber & " failed.", MsgBoxStyle.Critical, "Register failed")
-            'End If
-
-
-            'Else
-            '    '-----Not Registration--
-            '    If objSn Is Nothing Then
-            '        MsgBox(vSerialNumber & " does not exist in system or not in WIP",
-            '               MsgBoxStyle.Critical, "Not found unit serial number")
-            '        txtSn.Select(0, txtSn.TextLength)
-            '        Exit Sub
-            '    End If
-
-            '    gSerialNumber = objSn
-
-            '    Dim vWorkOrder As String = objSn("workorder")
-
-            '    If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
-            '        txtSn.Select(0, txtSn.TextLength)
-            '        Exit Sub
-            '    End If
-
-            '    '--Hook --PRE
-            '    If Not executeHook("PRE", btnStart.Name) Then
-            '        Exit Sub
-            '    End If
-            '    '------------
-
-
-
-            '    '---Check perform---
-            '    If objSn("perform_resource") <> "" Then
-            '        If objSn("perform_resource") <> gHostName Then
-            '            MsgBox(vSerialNumber & " is performing on " & objSn("perform_resource"),
-            '               MsgBoxStyle.Critical, "On performing")
-            '            txtSn.Select(0, txtSn.TextLength)
-            '            Exit Sub
-            '        End If
-            '    Else
-            '        '---Stamp Perform
-            '        setPerformSerialNumber(True, vSelectedOpr)
-            '    End If
-            '    '-------------------
-
-
-
-
-            '    'Dim vWorkOrder As String = objSn("workorder")
-            '    'If Not checkRouting(vSerialNumber, vWorkOrder, gOperationName) Then
-            '    '    txtSn.Select(0, txtSn.TextLength)
-            '    '    Exit Sub
-            '    'End If
-
-            '    btnCancel.Enabled = True
-            '    btnStart.Enabled = False
-            '    txtSn.Enabled = False
-            '    btnPass.Enabled = True
-            '    btnFail.Enabled = True
-
-            '    CreateObject(gCurrentRouteDetailUrl)
 
         End If
 
@@ -339,6 +272,37 @@ Public Class frmParameter
         'btnFail.Enabled = True
 
     End Sub
+
+    Function showOperationChoice(vRoutingDetailUrl As String) As Boolean
+        Dim objRoutingDetail As Object
+        objRoutingDetail = objApiService.getObjectByUrl(vRoutingDetailUrl)
+        If objRoutingDetail("choices").length > 0 Then
+            '--show label and Opeation list box
+            lblOprChoice.Visible = True
+            cbOperationChoice.Visible = True
+            '---Fill Data---
+            Dim operation As Object
+            Dim comboSource As New Dictionary(Of String, String)()
+            comboSource.Add("", "")
+            For Each operation In objRoutingDetail("choices")
+                comboSource.Add(operation("operation") & ":" & operation("title"), operation("operation"))
+            Next
+            With cbOperationChoice
+                .DropDownStyle = ComboBoxStyle.DropDownList
+                .DataSource = New BindingSource(comboSource, Nothing)
+                .DisplayMember = "Key"
+                .ValueMember = "Value"
+            End With
+            '---------------
+            Return True
+        Else
+            lblOprChoice.Visible = False
+            cbOperationChoice.Visible = False
+            cbOperationChoice.DataSource = Nothing
+            Return False
+        End If
+
+    End Function
 
     Function registerSerialNUmber(vSn As String, vWorkOrder As String,
                                   vOperation As String, vRouting As String,
@@ -365,6 +329,11 @@ Public Class frmParameter
         gNextFail = vNexFail
 
         ' Dim objLastOperation As Object = objApiService.getObjectBySlug("operation", vOperation)
+        'Operation Choice selected
+        If gHasOperationChoice And cbOperationChoice.SelectedValue <> "" Then
+            gNextPass = cbOperationChoice.SelectedValue
+            gNextFail = cbOperationChoice.SelectedValue
+        End If
 
         Dim json As New clsSerialNumberJson
         With json
@@ -374,7 +343,7 @@ Public Class frmParameter
             .description = vNote
             .last_result = True
             .last_operation = vOperation 'objLastOperation("name") 'must be name
-            .current_operation = vNextPass
+            .current_operation = gNextPass
             .wip = True
             .status = "A"
             .unit_type = "BUILT"
@@ -386,7 +355,7 @@ Public Class frmParameter
         Dim objResponse As Object
         objResponse = objApiService.SendRequest(vUrl & "/api/serialnumber/", output)
         gSerialNumberSlug = objResponse("slug")
-        tssSn.Text = vSn & " move to " & vNextPass
+        tssSn.Text = vSn & " move to " & gNextPass
         '----Performing---
         Dim vSnMasterId As Integer
         vSnMasterId = objResponse("id")
@@ -1275,6 +1244,11 @@ Exit_Function:
 
         btnStart.Enabled = True
         txtSn.Enabled = True
+
+        'operation choice
+        gHasOperationChoice = False
+        lblOprChoice.Visible = False
+        cbOperationChoice.Visible = False
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

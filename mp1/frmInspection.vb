@@ -45,6 +45,8 @@ Public Class frmInspection
     Dim gSerialNumber As Object
     Dim gSerialNumberSlug As String
 
+    Dim gHasOperationChoice As Boolean
+
     Private operationPropertyValue As String
     Public Property operation() As String
         Get
@@ -322,6 +324,9 @@ Public Class frmInspection
 
             CreateObject(gCurrentRouteDetailUrl)
 
+            'operation choice
+            gHasOperationChoice = showOperationChoice(gCurrentRouteDetailUrl)
+
         End If
 
 
@@ -331,37 +336,38 @@ Public Class frmInspection
         If Not executeHook("POST", btnStart.Name) Then
             Exit Sub
         End If
-
-
-
-        'vCurrentRoutingDetailSlug = objSerialNumber.object_RoutingDetail("slug")
-
-        'CreateObject(vCurrentRoutingDetailSlug)
-
-        'btnStart.Enabled = False
-        'btnRefresh.Enabled = True
-        'txtSn.Enabled = False
-
-        'btnPass.Enabled = True
-        'btnFail.Enabled = True
-
-
-
-
-        'If Not checkSerialNumber(txtSn.Text) Then
-        '    txtSn.Select(0, txtSn.Text.Length)
-        '    txtSn.Select()
-        'Else
-        '    CreateObject(vCurrentRoutingDetailSlug)
-        '    btnStart.Enabled = False
-        '    btnRefresh.Enabled = True
-        '    txtSn.Enabled = False
-
-        '    btnPass.Enabled = True
-        '    btnFail.Enabled = True
-        'End If
-
     End Sub
+
+    Function showOperationChoice(vRoutingDetailUrl As String) As Boolean
+        Dim objRoutingDetail As Object
+        objRoutingDetail = objApiService.getObjectByUrl(vRoutingDetailUrl)
+        If objRoutingDetail("choices").length > 0 Then
+            '--show label and Opeation list box
+            lblOprChoice.Visible = True
+            cbOperationChoice.Visible = True
+            '---Fill Data---
+            Dim operation As Object
+            Dim comboSource As New Dictionary(Of String, String)()
+            comboSource.Add("", "")
+            For Each operation In objRoutingDetail("choices")
+                comboSource.Add(operation("operation") & ":" & operation("title"), operation("operation"))
+            Next
+            With cbOperationChoice
+                .DropDownStyle = ComboBoxStyle.DropDownList
+                .DataSource = New BindingSource(comboSource, Nothing)
+                .DisplayMember = "Key"
+                .ValueMember = "Value"
+            End With
+            '---------------
+            Return True
+        Else
+            lblOprChoice.Visible = False
+            cbOperationChoice.Visible = False
+            cbOperationChoice.DataSource = Nothing
+            Return False
+        End If
+
+    End Function
 
     Function registerSerialNUmber(vSn As String, vWorkOrder As String,
                                   vOperation As String, vRouting As String,
@@ -1294,6 +1300,11 @@ Exit_Function:
         btnPass.Enabled = False
         btnFail.Enabled = False
         btnCancel.Enabled = False
+
+        'operation choice
+        gHasOperationChoice = False
+        lblOprChoice.Visible = False
+        cbOperationChoice.Visible = False
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -1332,15 +1343,31 @@ Exit_Function:
 
     Private Sub btnFail_Click(sender As Object, e As EventArgs) Handles btnFail.Click
         'checkNextCondition(vDefaultNextFailOperation)
-        Dim vMoveTo As String = checkNextCondition(gNextFail)
-        If vMoveTo <> gNextFail Then
-            If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+        'Dim vMoveTo As String = checkNextCondition(gNextFail)
+        'If vMoveTo <> gNextFail Then
+        '    If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+        '           "System will move unit to operation " & vMoveTo,
+        '           MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+        '        MsgBox("cancel")
+        '    End If
+        'End If
+
+        Dim vMoveTo As String
+        'Operation Choice selected
+        If gHasOperationChoice And cbOperationChoice.SelectedValue <> "" Then
+            vMoveTo = cbOperationChoice.SelectedValue
+        Else
+            vMoveTo = checkNextCondition(gNextPass)
+            If vMoveTo <> gNextPass Then
+                If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
                    "System will move unit to operation " & vMoveTo,
-                   MsgBoxStyle.YesNo + MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
-                MsgBox("cancel")
+                   MsgBoxStyle.YesNo + +MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+                    MsgBox("cancel")
+                    Exit Sub
+                End If
+
             End If
         End If
-
 
         '--Hook --PRE
         If Not executeHook("PRE", btnFail.Name) Then
@@ -1424,15 +1451,31 @@ Exit_Function:
 
 
         '--------------------
-        Dim vMoveTo As String = checkNextCondition(gNextPass)
-        If vMoveTo <> gNextPass Then
-            If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+        'Dim vMoveTo As String = checkNextCondition(gNextPass)
+        'If vMoveTo <> gNextPass Then
+        '    If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
+        '           "System will move unit to operation " & vMoveTo,
+        '           MsgBoxStyle.YesNo + +MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
+        '        MsgBox("cancel")
+        '        Exit Sub
+        '    End If
+        'End If
+
+        Dim vMoveTo As String
+        'Operation Choice selected
+        If gHasOperationChoice And cbOperationChoice.SelectedValue <> "" Then
+            vMoveTo = cbOperationChoice.SelectedValue
+        Else
+            vMoveTo = checkNextCondition(gNextPass)
+            If vMoveTo <> gNextPass Then
+                If MsgBox(gNextTitle & " is correct condition " & vbCrLf &
                    "System will move unit to operation " & vMoveTo,
                    MsgBoxStyle.YesNo + +MsgBoxStyle.Exclamation, "Routing Next Condition") = MsgBoxResult.No Then
-                MsgBox("cancel")
-                Exit Sub
-            End If
+                    MsgBox("cancel")
+                    Exit Sub
+                End If
 
+            End If
         End If
 
         '--Hook --PRE
