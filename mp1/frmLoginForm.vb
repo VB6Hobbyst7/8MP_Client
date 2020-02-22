@@ -51,7 +51,7 @@ Public Class frmLoginForm
             'Assign public variable (MUST -- Very Importance)
             user_id = clsAuthen.user_id_token
             access_token = clsAuthen.access_token
-            'refresh_token = clsAuthen.requestToken
+            refresh_token = clsAuthen.refresh_token
             Dim ii As Integer = clsAuthen.exp
             Dim epoch = New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             exp_token = epoch.AddSeconds(ii).ToLocalTime

@@ -80,6 +80,62 @@ Public Class clsAuthentication
         End Set
     End Property
 
+    Public Function refreshToken(refresh As String) As Boolean
+        Dim request As WebRequest = WebRequest.Create(Me.TokenService & "refresh/?refresh=" & refresh)
+        request.Method = "POST"
+        Dim postData As String
+        postData = "refresh=" & refresh
+        Dim byteArray As Byte() = Encoding.UTF8.GetBytes(postData)
+        request.ContentType = "application/x-www-form-urlencoded"
+        request.ContentLength = byteArray.Length
+        Dim dataStream As Stream = request.GetRequestStream()
+        dataStream.Write(byteArray, 0, byteArray.Length)
+        dataStream.Close()
+        Dim response As WebResponse
+        Try
+            response = request.GetResponse()
+            'Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)
+            dataStream = response.GetResponseStream()
+            Dim reader As New StreamReader(dataStream)
+            Dim responseFromServer As String = reader.ReadToEnd()
+            reader.Close()
+            dataStream.Close()
+            response.Close()
+            Dim jss = New JavaScriptSerializer()
+            Dim data As Object = jss.DeserializeObject(responseFromServer)
+            vMessage = "Login Successful...."
+            'Assign Token to global variable
+
+
+
+            For Each item As KeyValuePair(Of String, Object) In data
+                Console.WriteLine(item.Key & ": " & item.Value)
+                If item.Key = "refresh" Then
+                    vRefresh_Token = item.Value
+                End If
+
+                If item.Key = "access" Then
+                    vAccess_Token = item.Value
+                End If
+            Next
+
+            Dim Tokens As New JwtSecurityToken
+            Dim handler As New JwtSecurityTokenHandler
+
+            Tokens = handler.ReadToken(vAccess_Token)
+            vUser_id = Tokens.Payload.Item("user_id").ToString
+            vExp = Tokens.Payload.Exp   'Payload.Item("exp").ToString
+
+            Return True
+        Catch ex As Exception
+            vMessage = "Login failed :No active account found with the given credentials"
+            vRefresh_Token = ""
+            vAccess_Token = ""
+            Return False
+        End Try
+    End Function
+
+
     Public Function requestToken() As Boolean
         Dim request As WebRequest = WebRequest.Create(Me.TokenService)
         request.Method = "POST"

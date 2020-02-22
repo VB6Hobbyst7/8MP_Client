@@ -322,7 +322,8 @@ Public Class frmSnippet
             Root_url, login_user, login_password)
 
             Dim vTokenResult As Boolean
-            vTokenResult = clsAuthen.requestToken()
+            'vTokenResult = clsAuthen.requestToken()
+            vTokenResult = clsAuthen.refreshToken(refresh_token)
 
             'Assign public variable (MUST -- Very Importance)
             user_id = clsAuthen.user_id_token
